@@ -343,7 +343,7 @@
             .mobile-actions {
                 display: flex;
                 justify-content: space-between;
-                padding: 10px 15px;
+                /* padding: 10px 15px; */
                 background-color: rgba(19, 13, 36, 0.95);
                 border-radius: 5px;
                 margin-top: 0.75rem;
@@ -590,9 +590,24 @@
         }
 
         /* User dropdown menu */
+
+        #usernameDisplay {
+            /* width: 36px; */
+            /* height: 36px; */
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 16px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
         .user-dropdown {
             position: relative;
             display: inline-block;
+            margin-right: -5em;
         }
 
         .user-dropdown-toggle {
@@ -925,8 +940,8 @@
             <div id="userArea">
                 <!-- Guest user buttons (default) -->
                 <div id="guestButtons">
-                    <a class="d-flex align-items-center gap-2 btn login" id="loginBtn" href="#"
-                        data-bs-toggle="modal" data-bs-target="#authModal">
+                    <a class="d-flex align-items-center gap-2 btn login" id="loginBtn" href="#" data-bs-toggle="modal"
+                        data-bs-target="#authModal">
                         <i class="fas fa-user mr-1"></i> Login
                     </a>
                 </div>
@@ -934,7 +949,7 @@
                 <!-- Logged in user dropdown (initially hidden) -->
                 <div id="userDropdown" class="user-dropdown d-none">
                     <button class="user-dropdown-toggle" id="userDropdownToggle">
-                        <span id="usernameDisplay">Username</span>
+                        <span id="usernameDisplay" data-bs-toggle="tooltip" title="Username">Username</span>
                         <i class="fas fa-chevron-down ml-2"></i>
                     </button>
                     <div class="user-dropdown-menu" id="userDropdownMenu">
@@ -1167,15 +1182,31 @@
             function showLoggedInState(user) {
                 guestButtons.classList.add('d-none');
                 userDropdown.classList.remove('d-none');
-                usernameDisplay.textContent = user.username;
 
-                // Show admin panel link if user is a seller
+                // Get initials (e.g., "K R" → "KR")
+                const nameParts = user.username.trim().split(' ');
+                let initials = nameParts[0]?.charAt(0).toUpperCase() || '';
+                if (nameParts.length > 1) {
+                    initials += nameParts[1]?.charAt(0).toUpperCase() || '';
+                }
+
+                usernameDisplay.textContent = initials;
+
+                // Tooltip to show full username
+                usernameDisplay.setAttribute('title', user.username);
+
+                // Refresh tooltip
+                bootstrap.Tooltip.getInstance(usernameDisplay)?.dispose();
+                new bootstrap.Tooltip(usernameDisplay);
+
+                // Show admin link if seller
                 if (user.isSeller) {
                     adminPanelLink.classList.remove('d-none');
                 } else {
                     adminPanelLink.classList.add('d-none');
                 }
             }
+
 
             // Show logged out state
             function showLoggedOutState() {
