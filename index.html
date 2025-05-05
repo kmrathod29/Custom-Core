@@ -8,701 +8,10 @@
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
-
-    <style>
-        :root {
-            --primary-color: #2506ad;
-            --secondary-color: #5b28d6;
-            --accent-color: #9c5bf2;
-            --accent-hover: #b07ff5;
-            --light-color: #f8f9fa;
-            --light-bg: #f8f9fa;
-            --dark-color: #343a40;
-            --dark-bg: #130d24;
-            --transition: all 0.3s ease;
-            --card-bg: #ffffff;
-            /* --text-color: #333333; */
-        }
-
-        body {
-            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; */
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--light-bg);
-            /* color: var(--text-color); */
-            overflow-x: hidden;
-        }
-
-        .navbar {
-            background-color: var(--dark-bg);
-            padding: 0.6rem 1rem;
-        }
-
-        /* Brand styling */
-        .navbar-brand {
-            color: white;
-            font-weight: bold;
-            font-size: 1.5rem;
-            padding: 0.2rem 0;
-            position: relative;
-            overflow: hidden;
-            flex-shrink: 0;
-            margin-right: 0;
-        }
-
-        .navbar-brand span {
-            color: var(--accent-color);
-        }
-
-        .navbar-brand:hover {
-            color: white;
-        }
-
-        .navbar-brand i {
-            margin-right: 0.3rem;
-            transform: rotate(0deg);
-            transition: transform 0.4s ease;
-        }
-
-        .navbar-brand:hover i {
-            transform: rotate(15deg);
-        }
-
-        /* Toggler styling */
-        .navbar-toggler {
-            border-color: rgba(255, 255, 255, 0.1);
-            padding: 0.4rem 0.6rem;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: 0 0 0 0.25rem rgba(156, 91, 242, 0.25);
-        }
-
-        /* Add glow effect for active items */
-        .navbar-nav .nav-link.active {
-            text-shadow: 0 0 10px rgba(156, 91, 242, 0.5);
-        }
-
-        .nav-link {
-            color: white;
-            position: relative;
-            transition: all 0.3s ease;
-            padding: 0.7rem 1rem;
-            margin: 0 0.5rem;
-            font-weight: 400;
-            letter-spacing: 0.03em;
-            z-index: 1;
-        }
-
-        .nav-link::before {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 3px;
-            background-color: var(--accent-color);
-            opacity: 0;
-            border-radius: 10px;
-            transition: width 0.3s ease, opacity 0.2s ease;
-            z-index: -1;
-        }
-
-        .nav-link:hover::before {
-            width: 60%;
-            opacity: 0.6;
-        }
-
-        .nav-link:hover {
-            color: var(--accent-color);
-            transform: translateY(-2px);
-        }
-
-        /* Active link styling */
-        .nav-link.active {
-            color: var(--accent-color) !important;
-            font-weight: 500;
-            transform: translateY(-2px);
-        }
-
-        /* Modern active indicator with animation */
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 70%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(156, 91, 242, 0.3);
-            transition: width 0.3s ease;
-        }
-
-        .nav-link.active:hover::after {
-            width: 85%;
-        }
-
-        .navbar-toggler {
-            border-color: var(--accent-color);
-        }
-
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%239c5bf2' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-
-        .search-box {
-            position: relative;
-            height: 40px;
-        }
-
-        /* Search box styling */
-        .search-box input {
-            height: 100%;
-            width: 100%;
-            border: none;
-            outline: none;
-            background: rgba(255, 255, 255, 18%);
-            color: #fff;
-            border-radius: 20px;
-            padding: 0 60px 0 20px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .search-box input:focus {
-            background: rgba(255, 255, 255, 18%);
-            box-shadow: 0 0 5px rgb(255, 255, 255);
-        }
-
-        .search-box input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .search-box .search-btn {
-            position: absolute;
-            top: 50%;
-            right: 10px;
-            transform: translateY(-50%);
-            height: 30px;
-            width: 30px;
-            color: var(--accent-color);
-            background: transparent;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .search-box .search-btn:hover {
-            background: rgba(156, 91, 242, 0.2);
-            color: var(--accent-hover);
-        }
-
-        .cart-icon {
-            position: relative;
-            cursor: pointer;
-        }
-
-        .fa-shopping-cart:hover {
-            color: var(--accent-color);
-        }
-
-        .cart-count {
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            background-color: var(--accent-color);
-            color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-        }
-
-        #userArea .btn {
-            border-radius: 30px;
-            padding: 8px 25px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            transition: var(--transition);
-            margin-right: -5em;
-        }
-
-        .login {
-            /* background-color: transparent; */
-            border: 2px solid var(--accent-color);
-            color: white;
-            gap: 2em;
-        }
-
-        .login:hover {
-            /* background-color: var(--primary-color); */
-            color: var(--accent-color);
-            transform: translateY(-3px);
-            border: 2px solid var(--accent-color);
-            text-decoration: none !important;
-        }
-
-        /* Exclude Login button from hover effects */
-        #loginBtn::before,
-        #loginBtn:hover::before {
-            content: none !important;
-        }
-
-        .login:visited {
-            color: white;
-        }
-
-        /* Mobile search and cart container */
-        .mobile-actions {
-            display: none;
-        }
-
-        /* Default positioning for all screen sizes */
-        #userArea {
-            /* Remove any absolute positioning that might be affecting it globally */
-            position: relative;
-        }
-
-        /* For screens 992px and above (large screens) */
-        @media (min-width: 992px) {
-            #userArea {
-                /* Move to the right side */
-                margin-left: auto;
-                order: 3;
-                /* Place after navbar-collapse which usually has order: 2 */
-            }
-
-            /* Ensure navbar brand stays at left */
-            .navbar-brand {
-                margin-right: auto;
-                order: 1;
-            }
-
-            /* Ensure navbar collapse stays in the middle */
-            .navbar-collapse {
-                order: 2;
-                flex-grow: 1;
-            }
-
-            .navbar-nav {
-                margin-left: 1em;
-            }
-
-            .search-box {
-                margin-right: 10em !important;
-            }
-        }
-
-        /* Responsive adjustments */
-        @media (max-width: 991.98px) {
-            .navbar>.container {
-                position: relative;
-                justify-content: space-between;
-                padding: 0.5rem 1rem;
-            }
-
-            /* Center the brand */
-            .navbar-brand {
-                margin: 0 auto 0 10px;
-                text-align: left;
-                /* order: 1; */
-            }
-
-            /* Position the toggler on the left */
-            .navbar-toggler {
-                order: -1;
-                margin-left: -0.9rem;
-                font-size: 1em;
-            }
-
-            /* Move Login button to right side */
-            #userArea {
-                position: absolute;
-                right: 68px;
-                top: 10px;
-            }
-
-            #userArea .btn {
-                padding: 5px 15px;
-                font-size: 0.9rem;
-            }
-
-            /* Position the mobile search and cart container */
-            .mobile-actions {
-                display: flex;
-                justify-content: space-between;
-                /* padding: 10px 15px; */
-                background-color: rgba(19, 13, 36, 0.95);
-                border-radius: 5px;
-                margin-top: 0.75rem;
-            }
-
-            /* Make search box fill available space */
-            .mobile-search-box {
-                flex-grow: 1;
-                margin-right: 15px;
-            }
-
-            /* Hide desktop search box and cart icon */
-            .desktop-search-box,
-            .desktop-cart-icon {
-                display: none;
-            }
-
-            .cart-icon {
-                margin-top: 7px;
-            }
-
-            .navbar-collapse {
-                background-color: rgba(19, 13, 36, 0.95);
-                padding: 1rem;
-                border-radius: 10px;
-                margin-top: 10px;
-                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            }
-
-            .nav-link {
-                margin: 0.3rem 0;
-                padding: 0.5rem 1rem;
-                border-radius: 5px;
-            }
-
-            .nav-link:hover,
-            .nav-link.active {
-                background-color: rgba(156, 91, 242, 0.1);
-            }
-
-            .user-dropdown-menu {
-                position: static;
-                box-shadow: none;
-                border: 1px solid #f1f1f1;
-                margin-top: 0.5rem;
-                width: 100%;
-            }
-        }
-
-        /* Modal Styling */
-        .modal-content {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            background: linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
-        }
-
-        .modal-header {
-            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 1.5rem;
-        }
-
-        .toggle-switch {
-            position: relative;
-            width: 200px;
-            height: 36px;
-            margin: 0 auto;
-            background: #f1f1f1;
-            border-radius: 30px;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .toggle-checkbox {
-            position: absolute;
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-label {
-            position: relative;
-            display: block;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
-            border-radius: 30px;
-            transition: var(--transition);
-            margin: 0;
-        }
-
-        .toggle-label:before {
-            content: "";
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 97px;
-            height: 30px;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: 30px;
-            transition: 0.3s;
-            z-index: 1;
-        }
-
-        .toggle-checkbox:checked+.toggle-label:before {
-            left: 100px;
-        }
-
-        .login-text,
-        .signup-text {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            font-weight: 500;
-            transition: 0.3s;
-            z-index: 2;
-        }
-
-        .login-text {
-            left: 30px;
-        }
-
-        .signup-text {
-            right: 30px;
-        }
-
-        .toggle-checkbox:checked+.toggle-label .login-text {
-            color: #666;
-        }
-
-        .toggle-checkbox:checked+.toggle-label .signup-text {
-            color: white;
-        }
-
-        .toggle-checkbox:not(:checked)+.toggle-label .login-text {
-            color: white;
-        }
-
-        .toggle-checkbox:not(:checked)+.toggle-label .signup-text {
-            color: #666;
-        }
-
-        .modal-title {
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-header .close {
-            color: white;
-            opacity: 0.8;
-            transition: var(--transition);
-        }
-
-        .modal-header .close:hover {
-            opacity: 1;
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            padding: 1.5rem;
-            max-height: 75vh;
-            overflow-y: auto;
-        }
-
-        .form-group label {
-            font-weight: 500;
-            color: #4a4a4a;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control {
-            border-radius: 8px;
-            padding: 10px 12px;
-            border: 1px solid #e1e1e1;
-            transition: var(--transition);
-            background-color: #f8f9fa;
-        }
-
-        .form-control:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(78, 84, 200, 0.2);
-            background-color: white;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        form button[type="submit"] {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border: none;
-            border-radius: 30px;
-            color: white;
-            font-weight: 600;
-            padding: 12px 15px;
-            width: 100%;
-            margin-top: 1rem;
-            box-shadow: 0 4px 15px rgba(78, 84, 200, 0.3);
-            transition: var(--transition);
-        }
-
-        form button[type="submit"]:hover {
-            box-shadow: 0 6px 20px rgba(78, 84, 200, 0.5);
-            transform: translateY(-3px);
-        }
-
-        .modal a {
-            color: var(--primary-color);
-            font-weight: 500;
-            transition: var(--transition);
-        }
-
-        .modal a:hover {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-
-        /* Toggle buttons in Seller Modal */
-        .seller-toggle {
-            display: flex;
-            background-color: #e9ecef;
-            border-radius: 12px;
-            padding: 4px;
-            margin-bottom: 1rem;
-        }
-
-        .seller-toggle button {
-            flex: 1;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 0;
-            font-weight: 600;
-            transition: var(--transition);
-            background-color: transparent;
-            color: #6c757d;
-        }
-
-        .seller-toggle button.active {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            box-shadow: 0 4px 15px rgba(78, 84, 200, 0.3);
-        }
-
-        /* User dropdown menu */
-
-        #usernameDisplay {
-            /* width: 36px; */
-            /* height: 36px; */
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: bold;
-            font-size: 16px;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .user-dropdown {
-            position: relative;
-            display: inline-block;
-            margin-right: -5em;
-        }
-
-        .user-dropdown-toggle {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            border: none;
-            border-radius: 30px;
-            padding: 8px 20px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .user-dropdown-toggle:hover {
-            box-shadow: 0 4px 15px rgba(78, 84, 200, 0.5);
-        }
-
-        .user-dropdown-toggle i {
-            margin-left: 8px;
-        }
-
-        .user-dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            z-index: 1000;
-            display: none;
-            min-width: 180px;
-            padding: 0.5rem 0;
-            margin: 0.125rem 0 0;
-            background-color: white;
-            border-radius: 0.5rem;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-dropdown-menu.show {
-            display: block;
-            animation: fadeInDown 0.3s ease;
-        }
-
-        .user-dropdown-item {
-            display: block;
-            width: 100%;
-            padding: 0.5rem 1.5rem;
-            clear: both;
-            font-weight: 500;
-            color: var(--dark-color);
-            text-align: inherit;
-            white-space: nowrap;
-            background-color: transparent;
-            border: 0;
-            text-decoration: none;
-            transition: var(--transition);
-        }
-
-        .user-dropdown-item:hover {
-            color: var(--primary-color);
-            background-color: rgba(78, 84, 200, 0.1);
-            text-decoration: none;
-        }
-
-        .user-dropdown-item.admin {
-            color: #6a11cb;
-            font-weight: 600;
-        }
-
-        .user-dropdown-item.admin:hover {
-            background-color: rgba(106, 17, 203, 0.1);
-        }
-
-        .user-dropdown-item.logout {
-            color: #dc3545;
-            border-top: 1px solid #f1f1f1;
-            margin-top: 0.5rem;
-            padding-top: 0.75rem;
-        }
-
-        .user-dropdown-item.logout:hover {
-            background-color: rgba(220, 53, 69, 0.1);
-        }
-
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -910,6 +219,61 @@
         </div>
     </div>
 
+    <!-- Buy Now Modal -->
+    <div class="modal fade" id="buyNowModal" tabindex="-1" aria-labelledby="buyNowModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="buyNowModalLabel"><i class="fas fa-shopping-cart"></i> Confirm Your
+                        Purchase</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <h4>Order Summary</h4>
+                    <p><strong>Product:</strong> <span id="modalProductName"></span></p>
+                    <p><strong>Price:</strong> ₹<span id="modalProductPrice"></span></p>
+                    <!-- Quantity Selector -->
+                    <div class="quantity-selector">
+                        <button id="decreaseQuantity" class="btn btn-outline-secondary">-</button>
+                        <input type="text" id="quantity" value="1" readonly>
+                        <button id="increaseQuantity" class="btn btn-outline-secondary">+</button>
+                    </div>
+                    <p><strong>Total Price:</strong> ₹<span id="totalPrice"></span></p>
+                    <!-- Checkout Form -->
+                    <form id="orderForm">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="name" placeholder="Name Surname" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" placeholder="youremail@example.com"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Shipping Address</label>
+                            <textarea class="form-control" id="address" rows="3"
+                                placeholder="123 Main Street, City, Country" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <select class="form-control" id="paymentMethod" required>
+                                <option>Credit Card</option>
+                                <option>Debit Card</option>
+                                <option>Net Banking</option>
+                                <option>UPI</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="placeOrderButton">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Success toast notification -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
         <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="3000">
@@ -1023,465 +387,99 @@
     </nav>
     <!-- navbar section ends -->
 
-    <!-- Content section for demo -->
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
-                <h1 class="text-center">Fixed Navbar Example</h1>
-                <p class="text-center">Login button is now positioned at the right corner for screens ≥992px</p>
+    <section class="hero d-flex align-items-center justify-content-center text-center" id="home">
+        <div class="container home-container">
+            <div class="row justify-content-center">
+                <div class="col-12 col-md-10 col-lg-8">
+                    <h1 class="fw-bold display-4"><span>CUSTOM</span> CORE</h1>
+                    <h2 class="fw-medium mb-3">First Month On Us!</h2>
+                    <p class="mb-4">Start your journey to a high-performance custom PC that meets every expectation.</p>
+                    <a href="custom-pc-build.html" class="btn btn-warning px-4 py-2 rounded-pill" target="_blank">
+                        Customize Your PC
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <section class="product-section py-5" id="products">
+        <div class="container">
+            <h2 class="section-title text-center mb-3">Custom Core Prebuilt Gaming PCs</h2>
+            <p class="section-description text-center mb-4">We use the latest generation performance components and
+                configurations to
+                get you gaming, fast.</p>
+
+            <!-- Product Controls - Enhanced for Responsiveness -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="controls-wrapper">
+                        <!-- Show All PCs Button -->
+                        <button class="show-all-btn" onclick="loadAllProducts()">
+                            <i class="fas fa-desktop"></i>Show All PCs
+                        </button>
+
+                        <!-- Category Filters -->
+                        <div class="category-filters">
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="loadProductsByCategory('entry-level')">Entry Level</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="loadProductsByCategory('mid-range')">Mid-Range</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                onclick="loadProductsByCategory('high-end')">High-End</button>
+                        </div>
+
+                        <!-- Sort Options -->
+                        <div class="dropdown filter-dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="sortDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-sort me-1"></i>Sort By
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="sortProducts('price-low'); return false;">Price: Low to High</a></li>
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="sortProducts('price-high'); return false;">Price: High to Low</a></li>
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="sortProducts('rating'); return false;">Rating</a></li>
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="sortProducts('name'); return false;">Name</a></li>
+                            </ul>
+                        </div>
+
+                        <!-- Price Range Filter -->
+                        <div class="dropdown filter-dropdown">
+                            <button class="btn dropdown-toggle" type="button" id="priceDropdown"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-rupee-sign me-1"></i>Price Range
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="priceDropdown">
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="loadProductsByPriceRange(0, 125000); return false;">Under ₹1,25,000</a>
+                                </li>
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="loadProductsByPriceRange(125000, 200000); return false;">₹1,25,000 -
+                                        ₹2,00,000</a></li>
+                                <li><a class="dropdown-item" href="#"
+                                        onclick="loadProductsByPriceRange(200000, 1000000); return false;">Above
+                                        ₹2,00,000</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="product-container">
+                <!-- Products will be loaded dynamically here -->
+            </div>
+        </div>
+    </section>
 
     <!-- Bootstrap & jQuery JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.1/umd/popper.min.js"></script>
+    <script src="script.js"></script>
 
-    <!-- Search syncing script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // 1. Set active class based on current URL hash or pathname
-            function setActiveNavLink() {
-                const currentLocation = window.location.hash || window.location.pathname;
-                const navLinks = document.querySelectorAll('.nav-link');
-
-                // First, remove active class from all links
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                });
-
-                // Then set active based on current location
-                navLinks.forEach(link => {
-                    const href = link.getAttribute('href');
-                    if (href === '#') return; // Skip empty links
-
-                    // For dropdown toggle links, check if we're in that section
-                    if (link.classList.contains('dropdown-toggle') && currentLocation.includes(href.replace('#', ''))) {
-                        link.classList.add('active');
-                        return;
-                    }
-
-                    // For normal links, check exact match
-                    if (currentLocation === href ||
-                        currentLocation.endsWith(href) ||
-                        (href === '#home' && (currentLocation === '/' || currentLocation === '/index.html' || currentLocation === ''))) {
-                        link.classList.add('active');
-                    }
-                });
-
-                // Also handle dropdown items
-                const dropdownItems = document.querySelectorAll('.dropdown-item');
-                dropdownItems.forEach(item => {
-                    const href = item.getAttribute('href');
-                    if (currentLocation === href || currentLocation.endsWith(href)) {
-                        // Find parent dropdown and set it active too
-                        const parentDropdown = item.closest('.dropdown').querySelector('.dropdown-toggle');
-                        if (parentDropdown) {
-                            parentDropdown.classList.add('active');
-                        }
-                    }
-                });
-            }
-
-            // Set active link initially
-            setActiveNavLink();
-
-            // Update active link when hash changes
-            window.addEventListener('hashchange', setActiveNavLink);
-
-            // Add click handler for nav links
-            const navLinks = document.querySelectorAll('.nav-link:not(.dropdown-toggle)');
-            navLinks.forEach(link => {
-                link.addEventListener('click', function (e) {
-                    // Don't interfere with dropdown toggle behavior
-                    if (this.classList.contains('dropdown-toggle')) return;
-
-                    // Set this link as active
-                    navLinks.forEach(navLink => navLink.classList.remove('active'));
-                    this.classList.add('active');
-
-                    // On mobile, close the navbar after clicking a link
-                    const navbarCollapse = document.querySelector('.navbar-collapse');
-                    if (navbarCollapse.classList.contains('show')) {
-                        const bsCollapse = new bootstrap.Collapse(navbarCollapse);
-                        bsCollapse.hide();
-                    }
-                });
-            });
-
-            // Handle dropdown items click
-            const dropdownItems = document.querySelectorAll('.dropdown-item');
-            dropdownItems.forEach(item => {
-                item.addEventListener('click', function () {
-                    // Find parent dropdown toggle and set it active
-                    const parentDropdown = this.closest('.dropdown').querySelector('.dropdown-toggle');
-                    if (parentDropdown) {
-                        navLinks.forEach(navLink => navLink.classList.remove('active'));
-                        parentDropdown.classList.add('active');
-                    }
-
-                    // On mobile, close the navbar after clicking
-                    const navbarCollapse = document.querySelector('.navbar-collapse');
-                    if (navbarCollapse.classList.contains('show')) {
-                        const bsCollapse = new bootstrap.Collapse(navbarCollapse);
-                        bsCollapse.hide();
-                    }
-                });
-            });
-
-            // If no active link is set, default to home
-            if (!document.querySelector('.nav-link.active')) {
-                document.querySelector('.nav-link[href="#home"]').classList.add('active');
-            }
-        });
-
-
-
-        // Toggle between seller login and signup forms
-        document.getElementById('sellerLoginBtn').addEventListener('click', function () {
-            document.getElementById('sellerLoginForm').classList.remove('d-none');
-            document.getElementById('sellerSignupForm').classList.add('d-none');
-            document.getElementById('sellerLoginBtn').classList.add('active');
-            document.getElementById('sellerSignupBtn').classList.remove('active');
-        });
-
-        document.getElementById('sellerSignupBtn').addEventListener('click', function () {
-            document.getElementById('sellerLoginForm').classList.add('d-none');
-            document.getElementById('sellerSignupForm').classList.remove('d-none');
-            document.getElementById('sellerLoginBtn').classList.remove('active');
-            document.getElementById('sellerSignupBtn').classList.add('active');
-        });
-
-        // User authentication logic
-        document.addEventListener('DOMContentLoaded', function () {
-            // DOM elements
-            const guestButtons = document.getElementById('guestButtons');
-            const userDropdown = document.getElementById('userDropdown');
-            const usernameDisplay = document.getElementById('usernameDisplay');
-            const userDropdownToggle = document.getElementById('userDropdownToggle');
-            const userDropdownMenu = document.getElementById('userDropdownMenu');
-            const adminPanelLink = document.getElementById('adminPanelLink');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            const sellerLoginForm = document.getElementById('sellerLoginForm');
-            const sellerSignupForm = document.getElementById('sellerSignupForm');
-            const successToast = document.getElementById('successToast');
-            const successToastMessage = document.getElementById('successToastMessage');
-
-            // Check if user is logged in (from session storage)
-            function checkLoginStatus() {
-                const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
-                if (currentUser) {
-                    // User is logged in
-                    showLoggedInState(currentUser);
-                }
-            }
-
-            // Show logged in state
-            function showLoggedInState(user) {
-                guestButtons.classList.add('d-none');
-                userDropdown.classList.remove('d-none');
-
-                // Get initials (e.g., "K R" → "KR")
-                const nameParts = user.username.trim().split(' ');
-                let initials = nameParts[0]?.charAt(0).toUpperCase() || '';
-                if (nameParts.length > 1) {
-                    initials += nameParts[1]?.charAt(0).toUpperCase() || '';
-                }
-
-                usernameDisplay.textContent = initials;
-
-                // Tooltip to show full username
-                usernameDisplay.setAttribute('title', user.username);
-
-                // Refresh tooltip
-                bootstrap.Tooltip.getInstance(usernameDisplay)?.dispose();
-                new bootstrap.Tooltip(usernameDisplay);
-
-                // Show admin link if seller
-                if (user.isSeller) {
-                    adminPanelLink.classList.remove('d-none');
-                } else {
-                    adminPanelLink.classList.add('d-none');
-                }
-            }
-
-
-            // Show logged out state
-            function showLoggedOutState() {
-                userDropdown.classList.add('d-none');
-                guestButtons.classList.remove('d-none');
-            }
-
-            // Toggle dropdown menu
-            userDropdownToggle.addEventListener('click', function () {
-                userDropdownMenu.classList.toggle('show');
-            });
-
-            // Close dropdown when clicking outside
-            document.addEventListener('click', function (event) {
-                if (!userDropdown.contains(event.target)) {
-                    userDropdownMenu.classList.remove('show');
-                }
-            });
-
-            // Login form submission
-            loginForm.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-
-                // Simple validation
-                if (!username || !password) {
-                    alert('Please fill in all fields');
-                    return;
-                }
-
-                // Mock login (in a real app, this would be an API call)
-                const user = {
-                    username: username,
-                    isSeller: false
-                };
-
-                // Store user in session
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-                // Update UI
-                showLoggedInState(user);
-
-                // Close modal - FIXED for Bootstrap 5
-                const loginModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
-                if (loginModal) {
-                    loginModal.hide();
-                }
-
-                // Show success message - Bootstrap 5 syntax
-                successToastMessage.textContent = `Welcome back, ${username}!`;
-                const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                toast.show();
-
-                // Reset form
-                loginForm.reset();
-            });
-
-            // Sign up form submission
-            signupForm.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const username = document.getElementById('newUsername').value;
-                const email = document.getElementById('newEmail').value;
-                const password = document.getElementById('newPassword').value;
-                const termsCheck = document.getElementById('termsCheck').checked;
-
-                // Simple validation
-                if (!username || !email || !password || !termsCheck) {
-                    alert('Please fill in all fields and agree to the terms');
-                    return;
-                }
-
-                // Validate email format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('Please enter a valid email address');
-                    return;
-                }
-
-                // Validate password strength
-                if (password.length < 8) {
-                    alert('Password must be at least 8 characters long');
-                    return;
-                }
-
-                // Mock sign up (in a real app, this would be an API call)
-                const user = {
-                    username: username,
-                    email: email,
-                    isSeller: false
-                };
-
-                // Store user in session
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-                // Update UI
-                showLoggedInState(user);
-
-                // Close modal - FIXED for Bootstrap 5
-                const signupModal = bootstrap.Modal.getInstance(document.getElementById('authModal'));
-                if (signupModal) {
-                    signupModal.hide();
-                }
-
-                // Show success message - Bootstrap 5 syntax
-                successToastMessage.textContent = `Account created successfully. Welcome, ${username}!`;
-                const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                toast.show();
-
-                // Reset form
-                signupForm.reset();
-            });
-
-            // Seller login form submission
-            sellerLoginForm.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const username = document.getElementById('sellerLoginUsername').value;
-                const password = document.getElementById('sellerLoginPassword').value;
-
-                // Simple validation
-                if (!username || !password) {
-                    alert('Please fill in all fields');
-                    return;
-                }
-
-                // Mock seller login (in a real app, this would be an API call)
-                const user = {
-                    username: username,
-                    isSeller: true
-                };
-
-                // Store user in session
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-                // Update UI
-                showLoggedInState(user);
-
-                // Close modal - FIXED for Bootstrap 5
-                const sellerModal = bootstrap.Modal.getInstance(document.getElementById('sellerModal'));
-                if (sellerModal) {
-                    sellerModal.hide();
-                }
-
-                // Show success message - Bootstrap 5 syntax
-                successToastMessage.textContent = `Welcome back, Seller ${username}!`;
-                const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                toast.show();
-
-                // Reset form
-                sellerLoginForm.reset();
-            });
-
-            // Seller sign up form submission
-            sellerSignupForm.addEventListener('submit', function (event) {
-                event.preventDefault();
-
-                const fullName = document.getElementById('signupName').value;
-                const email = document.getElementById('signupEmail').value;
-                const shopName = document.getElementById('shopName').value;
-                const username = document.getElementById('signupUsername').value;
-                const password = document.getElementById('signupPassword').value;
-                const termsCheck = document.getElementById('sellerTermsCheck').checked;
-
-                // Simple validation
-                if (!fullName || !email || !shopName || !username || !password || !termsCheck) {
-                    alert('Please fill in all fields and agree to the terms');
-                    return;
-                }
-
-                // Validate email format
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    alert('Please enter a valid email address');
-                    return;
-                }
-
-                // Validate password strength
-                if (password.length < 8) {
-                    alert('Password must be at least 8 characters long');
-                    return;
-                }
-
-                // Mock seller sign up (in a real app, this would be an API call)
-                const user = {
-                    username: username,
-                    fullName: fullName,
-                    email: email,
-                    shopName: shopName,
-                    isSeller: true
-                };
-
-                // Store user in session
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-                // Update UI
-                showLoggedInState(user);
-
-                // Close modal - FIXED
-                $('#sellerModal').modal('hide');
-
-                // Show success message - Bootstrap 5 syntax
-                successToastMessage.textContent = `Seller account created successfully. Welcome, ${username}!`;
-                const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                toast.show();
-
-                // Reset form
-                sellerSignupForm.reset();
-            });
-
-            // Logout button
-            logoutBtn.addEventListener('click', function (event) {
-                event.preventDefault();
-
-                // Remove user from session
-                sessionStorage.removeItem('currentUser');
-
-                // Update UI
-                showLoggedOutState();
-
-                // Close dropdown
-                userDropdownMenu.classList.remove('show');
-
-                // Show success message - Bootstrap 5 syntax
-                successToastMessage.textContent = 'Logged out successfully!';
-                const toast = new bootstrap.Toast(document.getElementById('successToast'));
-                toast.show();
-            });
-
-            // Check login status on page load
-            checkLoginStatus();
-
-        });
-
-        // Initialize tooltips - Bootstrap 5 syntax
-        document.addEventListener('DOMContentLoaded', function () {
-            const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-            tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl);
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            // Get toggle checkbox and forms
-            const authToggle = document.getElementById('authToggle');
-            const loginForm = document.getElementById('loginForm');
-            const signupForm = document.getElementById('signupForm');
-            const modalTitleText = document.getElementById('modalTitleText');
-
-            // Toggle between login and signup forms
-            authToggle.addEventListener('change', function () {
-                if (this.checked) {
-                    // Show signup form, hide login form
-                    loginForm.style.display = 'none';
-                    signupForm.style.display = 'block';
-                    modalTitleText.innerHTML = 'Create an Account';
-                } else {
-                    // Show login form, hide signup form
-                    loginForm.style.display = 'block';
-                    signupForm.style.display = 'none';
-                    modalTitleText.innerHTML = 'Login to Your Account';
-                }
-            });
-
-            // Reset to login form when modal is closed - Bootstrap 5 syntax
-            document.getElementById('authModal').addEventListener('hidden.bs.modal', function () {
-                authToggle.checked = false;
-                loginForm.style.display = 'block';
-                signupForm.style.display = 'none';
-                modalTitleText.innerHTML = 'Login to Your Account';
-            });
-        });
-    </script>
 </body>
 
 </html>
