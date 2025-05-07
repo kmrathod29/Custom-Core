@@ -1,3 +1,271 @@
+// Comprehensive fix for Bootstrap offcanvas issues with improved z-index management
+document.addEventListener("DOMContentLoaded", function () {
+  // Get the offcanvas element
+  const mobileSidebar = document.getElementById("mobileSidebar");
+
+  if (mobileSidebar) {
+    // Create a single, global offcanvas instance that we'll reuse
+    let offcanvasInstance;
+
+    // Function to safely initialize or get the offcanvas instance
+    const getOffcanvasInstance = () => {
+      // Check if an instance exists
+      const existingInstance = bootstrap.Offcanvas.getInstance(mobileSidebar);
+
+      if (existingInstance) {
+        return existingInstance;
+      } else {
+        // Create a new instance if one doesn't exist
+        return new bootstrap.Offcanvas(mobileSidebar);
+      }
+    };
+
+    // Initialize the instance once
+    offcanvasInstance = getOffcanvasInstance();
+
+    // Z-index management functions
+    const setOpenZIndex = () => {
+      mobileSidebar.style.zIndex = "1051"; // Higher z-index when open
+
+      // Also ensure backdrop has appropriate z-index
+      const backdrop = document.querySelector(".offcanvas-backdrop");
+      if (backdrop) backdrop.style.zIndex = "1050";
+    };
+
+    const resetZIndex = () => {
+      // Only reset z-index after animation completes
+      mobileSidebar.style.zIndex = "1045"; // Default z-index when closed
+    };
+
+    // Handle custom close button if it exists
+    const customCloseButton = mobileSidebar.querySelector(
+      ".custom-offcanvas-close"
+    );
+    if (customCloseButton) {
+      // Fix accessibility issue
+      customCloseButton.setAttribute("tabindex", "-1");
+
+      customCloseButton.addEventListener("click", function (e) {
+        e.preventDefault();
+        offcanvasInstance = getOffcanvasInstance();
+        offcanvasInstance.hide();
+      });
+    }
+
+    // Handle all the nav links within the offcanvas
+    const navLinks = mobileSidebar.querySelectorAll("a");
+    navLinks.forEach((link) => {
+      // Remove any existing data-bs-dismiss attribute to prevent default behavior
+      if (link.hasAttribute("data-bs-dismiss")) {
+        link.removeAttribute("data-bs-dismiss");
+      }
+
+      // Fix accessibility
+      link.setAttribute("tabindex", "-1");
+
+      // Add our custom click handler
+      link.addEventListener("click", function (e) {
+        // Don't interfere with links that should behave normally
+        if (this.classList.contains("dropdown-toggle")) return;
+
+        // Get the latest instance and hide it
+        offcanvasInstance = getOffcanvasInstance();
+        offcanvasInstance.hide();
+      });
+    });
+
+    // Use the inert attribute instead of aria-hidden
+    mobileSidebar.addEventListener("hide.bs.offcanvas", function () {
+      mobileSidebar.setAttribute("inert", "");
+    });
+
+    // Remove inert when showing
+    mobileSidebar.addEventListener("show.bs.offcanvas", function () {
+      mobileSidebar.removeAttribute("inert");
+
+      // Set higher z-index when opened
+      setOpenZIndex();
+
+      // Make all focusable elements focusable again
+      const focusableElements = mobileSidebar.querySelectorAll(
+        "a, button, input, select, textarea"
+      );
+      focusableElements.forEach((el) => {
+        el.removeAttribute("tabindex");
+      });
+    });
+
+    // Ensure backdrop is properly removed after hiding
+    mobileSidebar.addEventListener("hidden.bs.offcanvas", function () {
+      const backdrops = document.querySelectorAll(".offcanvas-backdrop");
+      backdrops.forEach((backdrop) => {
+        backdrop.remove();
+      });
+
+      // Reset the body styling that Bootstrap adds
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
+      document.body.classList.remove("modal-open");
+
+      // Reset to default z-index after animation completes
+      resetZIndex();
+    });
+
+    // Add a global document click handler to ensure offcanvas can always be triggered
+    const offcanvasTogglers = document.querySelectorAll(
+      '[data-bs-toggle="offcanvas"][data-bs-target="#mobileSidebar"]'
+    );
+    offcanvasTogglers.forEach((toggler) => {
+      toggler.addEventListener("click", function (e) {
+        e.preventDefault();
+
+        // Get the latest instance and show it
+        offcanvasInstance = getOffcanvasInstance();
+        offcanvasInstance.show();
+      });
+    });
+
+    // Initialize with inert attribute if offcanvas is initially hidden
+    if (!mobileSidebar.classList.contains("show")) {
+      mobileSidebar.setAttribute("inert", "");
+    }
+  }
+
+  // Clean up any stray backdrops on page load (safeguard)
+  const strayBackdrops = document.querySelectorAll(".offcanvas-backdrop");
+  strayBackdrops.forEach((backdrop) => {
+    backdrop.remove();
+  });
+
+  // Add styles for custom close button with improved visibility
+  const styleElement = document.createElement("style");
+  styleElement.textContent = `
+    .custom-offcanvas-close {
+      box-sizing: content-box;
+      width: 1em;
+      height: 1em;
+      padding: 0.5rem;
+      color: #ffffff; /* Changed to white for better visibility */
+      background: transparent url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23ffffff'%3e%3cpath d='M.293.293a1 1 0 011.414 0L8 6.586 14.293.293a1 1 0 111.414 1.414L9.414 8l6.293 6.293a1 1 0 01-1.414 1.414L8 9.414l-6.293 6.293a1 1 0 01-1.414-1.414L6.586 8 .293 1.707a1 1 0 010-1.414z'/%3e%3c/svg%3e") center/1em auto no-repeat;
+      border: 0;
+      border-radius: 0.25rem;
+      opacity: 1;
+      cursor: pointer;
+      transition: opacity 0.15s linear;
+      position: absolute; /* Make it absolute positioned */
+      top: 10px; /* Position from top */
+      right: 10px; /* Position from right */
+      z-index: 1052; /* Higher than the offcanvas itself */
+    }
+    
+    .custom-offcanvas-close:hover {
+      opacity: 0.75;
+      text-decoration: none;
+    }
+    
+    .custom-offcanvas-close:focus {
+      outline: none;
+      box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.5); /* Changed to white for better visibility */
+    }
+    
+    /* Ensure offcanvas is visible while transitioning */
+    .offcanvas.offcanvas-start {
+      visibility: visible !important;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    .offcanvas.offcanvas-start.show {
+      transform: translateX(0);
+    }
+    
+    /* Ensure offcanvas is hidden properly when closed */
+    .offcanvas[inert] {
+      pointer-events: none;
+      cursor: default;
+    }
+
+    .modal-backdrop.show {
+    // opacity: 0; 
+    }
+  `;
+  document.head.appendChild(styleElement);
+
+  // Handle mobile navbar z-index to prevent overlay cutoff
+  const mobileScrollNavbar = document.querySelector(".mobile-scroll-navbar");
+  if (mobileScrollNavbar) {
+    // Adjust z-index when offcanvas is shown/hidden
+    document.body.addEventListener("shown.bs.offcanvas", function () {
+      mobileScrollNavbar.style.zIndex = "1039"; // Below the offcanvas and backdrop
+    });
+
+    document.body.addEventListener("hidden.bs.offcanvas", function () {
+      // Give it a small delay to avoid flickering
+      setTimeout(() => {
+        mobileScrollNavbar.style.zIndex = "1049"; // Reset z-index but keep below potentially active elements
+      }, 300);
+    });
+  }
+});
+
+// Handle mobile navbar on scroll
+const scrollNav = document.querySelector(".mobile-scroll-navbar");
+const mobileLine1 = document.querySelector(".mobile-nav-line-1");
+const mobileLine2 = document.querySelector(".mobile-nav-line-2");
+
+// Handle scroll events
+window.addEventListener("scroll", () => {
+  if (window.innerWidth <= 768) {
+    if (window.scrollY > 100) {
+      if (scrollNav) scrollNav.style.display = "flex";
+      if (mobileLine1) mobileLine1.style.display = "none";
+      if (mobileLine2) mobileLine2.style.display = "none";
+    } else {
+      if (scrollNav) scrollNav.style.display = "none";
+      if (mobileLine1) mobileLine1.style.display = "flex";
+      if (mobileLine2) mobileLine2.style.display = "flex";
+    }
+  }
+});
+
+// Handle window resize events
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 768) {
+    if (scrollNav) scrollNav.style.display = "none";
+    if (mobileLine1) mobileLine1.style.display = "none";
+    if (mobileLine2) mobileLine2.style.display = "none";
+  } else {
+    if (window.scrollY > 100) {
+      if (scrollNav) scrollNav.style.display = "flex";
+      if (mobileLine1) mobileLine1.style.display = "none";
+      if (mobileLine2) mobileLine2.style.display = "none";
+    } else {
+      if (scrollNav) scrollNav.style.display = "none";
+      if (mobileLine1) mobileLine1.style.display = "flex";
+      if (mobileLine2) mobileLine2.style.display = "flex";
+    }
+  }
+});
+
+// Initialize correctly on page load
+window.addEventListener("load", () => {
+  if (window.innerWidth <= 768) {
+    if (window.scrollY > 100) {
+      if (scrollNav) scrollNav.style.display = "flex";
+      if (mobileLine1) mobileLine1.style.display = "none";
+      if (mobileLine2) mobileLine2.style.display = "none";
+    } else {
+      if (scrollNav) scrollNav.style.display = "none";
+      if (mobileLine1) mobileLine1.style.display = "flex";
+      if (mobileLine2) mobileLine2.style.display = "flex";
+    }
+  } else {
+    if (scrollNav) scrollNav.style.display = "none";
+    if (mobileLine1) mobileLine1.style.display = "none";
+    if (mobileLine2) mobileLine2.style.display = "none";
+  }
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   // Calculate navbar height to use for offset
   const getNavbarHeight = () => {
@@ -97,39 +365,40 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
- // Fix anchor links on page load
- function fixAnchorsOnLoad() {
+  // Fix anchor links on page load
+  function fixAnchorsOnLoad() {
     // Check if there's a hash in the URL
     if (window.location.hash) {
-        // Wait a moment for everything to load
-        setTimeout(() => {
-            const targetId = window.location.hash;
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                // Calculate position with navbar offset
-                const navbarHeight = getNavbarHeight();
-                const elementPosition = targetElement.getBoundingClientRect().top;
-                const offsetPosition = elementPosition + window.pageYOffset - navbarHeight;
-                
-                // Scroll to the target with offset
-                window.scrollTo({
-                    top: offsetPosition,
-                    behavior: 'smooth'
-                });
-            }
-        }, 100);
+      // Wait a moment for everything to load
+      setTimeout(() => {
+        const targetId = window.location.hash;
+        const targetElement = document.querySelector(targetId);
+
+        if (targetElement) {
+          // Calculate position with navbar offset
+          const navbarHeight = getNavbarHeight();
+          const elementPosition = targetElement.getBoundingClientRect().top;
+          const offsetPosition =
+            elementPosition + window.pageYOffset - navbarHeight;
+
+          // Scroll to the target with offset
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth",
+          });
+        }
+      }, 100);
     }
-}
+  }
 
   // Set active link initially
   setActiveNavLink();
 
-// Set up smooth scrolling
-handleNavLinkClick();
+  // Set up smooth scrolling
+  handleNavLinkClick();
 
-// Fix anchors on page load
-fixAnchorsOnLoad();
+  // Fix anchors on page load
+  fixAnchorsOnLoad();
 
   // Update active link when hash changes
   window.addEventListener("hashchange", setActiveNavLink);
@@ -200,7 +469,7 @@ document
     document.getElementById("sellerSignupBtn").classList.add("active");
   });
 
-// User authentication logic
+// Updated User authentication logic
 document.addEventListener("DOMContentLoaded", function () {
   // DOM elements
   const guestButtons = document.getElementById("guestButtons");
@@ -210,12 +479,32 @@ document.addEventListener("DOMContentLoaded", function () {
   const userDropdownMenu = document.getElementById("userDropdownMenu");
   const adminPanelLink = document.getElementById("adminPanelLink");
   const logoutBtn = document.getElementById("logoutBtn");
+
+  // Mobile DOM elements
+  const mobileGuestButtons = document.getElementById("mobileGuestButtons");
+  const mobileUserDropdown = document.getElementById("mobileUserDropdown");
+  const mobileUsernameDisplay = document.getElementById(
+    "mobileUsernameDisplay"
+  );
+  const mobileUserDropdownToggle = document.getElementById(
+    "mobileUserDropdownToggle"
+  );
+  const mobileUserDropdownMenu = document.getElementById(
+    "mobileUserDropdownMenu"
+  );
+  const mobileAdminPanelLink = document.getElementById("mobileAdminPanelLink");
+  const mobileLogoutBtn = document.getElementById("mobileLogoutBtn");
+
   const loginForm = document.getElementById("loginForm");
   const signupForm = document.getElementById("signupForm");
   const sellerLoginForm = document.getElementById("sellerLoginForm");
   const sellerSignupForm = document.getElementById("sellerSignupForm");
   const successToast = document.getElementById("successToast");
   const successToastMessage = document.getElementById("successToastMessage");
+
+  // Get toggle checkbox and forms
+  const authToggle = document.getElementById("authToggle");
+  const modalTitleText = document.getElementById("modalTitleText");
 
   // Check if user is logged in (from session storage)
   function checkLoginStatus() {
@@ -228,8 +517,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // Show logged in state
   function showLoggedInState(user) {
+    // Desktop UI update
     guestButtons.classList.add("d-none");
     userDropdown.classList.remove("d-none");
+
+    // Mobile UI update
+    mobileGuestButtons.classList.add("d-none");
+    mobileUserDropdown.classList.remove("d-none");
 
     // Get initials (e.g., "K R" → "KR")
     const nameParts = user.username.trim().split(" ");
@@ -238,38 +532,59 @@ document.addEventListener("DOMContentLoaded", function () {
       initials += nameParts[1]?.charAt(0).toUpperCase() || "";
     }
 
+    // Update desktop username display
     usernameDisplay.textContent = initials;
-
-    // Tooltip to show full username
     usernameDisplay.setAttribute("title", user.username);
-
-    // Refresh tooltip
     bootstrap.Tooltip.getInstance(usernameDisplay)?.dispose();
     new bootstrap.Tooltip(usernameDisplay);
+
+    // Update mobile username display
+    mobileUsernameDisplay.textContent = initials;
+    mobileUsernameDisplay.setAttribute("title", user.username);
+    bootstrap.Tooltip.getInstance(mobileUsernameDisplay)?.dispose();
+    new bootstrap.Tooltip(mobileUsernameDisplay);
 
     // Show admin link if seller
     if (user.isSeller) {
       adminPanelLink.classList.remove("d-none");
+      mobileAdminPanelLink.classList.remove("d-none");
     } else {
       adminPanelLink.classList.add("d-none");
+      mobileAdminPanelLink.classList.add("d-none");
     }
   }
 
   // Show logged out state
   function showLoggedOutState() {
+    // Desktop UI update
     userDropdown.classList.add("d-none");
     guestButtons.classList.remove("d-none");
+
+    // Mobile UI update
+    mobileUserDropdown.classList.add("d-none");
+    mobileGuestButtons.classList.remove("d-none");
   }
 
-  // Toggle dropdown menu
+  // Toggle desktop dropdown menu
   userDropdownToggle.addEventListener("click", function () {
     userDropdownMenu.classList.toggle("show");
   });
 
+  // Toggle mobile dropdown menu
+  mobileUserDropdownToggle.addEventListener("click", function () {
+    mobileUserDropdownMenu.classList.toggle("show");
+  });
+
   // Close dropdown when clicking outside
   document.addEventListener("click", function (event) {
+    // Desktop dropdown
     if (!userDropdown.contains(event.target)) {
       userDropdownMenu.classList.remove("show");
+    }
+
+    // Mobile dropdown
+    if (!mobileUserDropdown.contains(event.target)) {
+      mobileUserDropdownMenu.classList.remove("show");
     }
   });
 
@@ -467,8 +782,13 @@ document.addEventListener("DOMContentLoaded", function () {
     // Update UI
     showLoggedInState(user);
 
-    // Close modal - FIXED
-    $("#sellerModal").modal("hide");
+    // Close modal - FIXED for Bootstrap 5
+    const sellerModal = bootstrap.Modal.getInstance(
+      document.getElementById("sellerModal")
+    );
+    if (sellerModal) {
+      sellerModal.hide();
+    }
 
     // Show success message - Bootstrap 5 syntax
     successToastMessage.textContent = `Seller account created successfully. Welcome, ${username}!`;
@@ -479,7 +799,7 @@ document.addEventListener("DOMContentLoaded", function () {
     sellerSignupForm.reset();
   });
 
-  // Logout button
+  // Desktop logout button
   logoutBtn.addEventListener("click", function (event) {
     event.preventDefault();
 
@@ -498,26 +818,29 @@ document.addEventListener("DOMContentLoaded", function () {
     toast.show();
   });
 
-  // Check login status on page load
-  checkLoginStatus();
-});
+  // Mobile logout button
+  mobileLogoutBtn.addEventListener("click", function (event) {
+    event.preventDefault();
 
-// Initialize tooltips - Bootstrap 5 syntax
-document.addEventListener("DOMContentLoaded", function () {
-  const tooltipTriggerList = [].slice.call(
-    document.querySelectorAll('[data-bs-toggle="tooltip"]')
-  );
-  tooltipTriggerList.map(function (tooltipTriggerEl) {
-    return new bootstrap.Tooltip(tooltipTriggerEl);
+    // Remove user from session
+    sessionStorage.removeItem("currentUser");
+
+    // Update UI
+    showLoggedOutState();
+
+    // Close dropdown
+    mobileUserDropdownMenu.classList.remove("show");
+
+    // Show success message - Bootstrap 5 syntax
+    successToastMessage.textContent = "Logged out successfully!";
+    const toast = new bootstrap.Toast(document.getElementById("successToast"));
+    toast.show();
   });
-});
 
-document.addEventListener("DOMContentLoaded", function () {
-  // Get toggle checkbox and forms
-  const authToggle = document.getElementById("authToggle");
-  const loginForm = document.getElementById("loginForm");
-  const signupForm = document.getElementById("signupForm");
-  const modalTitleText = document.getElementById("modalTitleText");
+  // Initialize tooltips
+  $(function () {
+    $('[data-toggle="tooltip"]').tooltip();
+  });
 
   // Toggle between login and signup forms
   authToggle.addEventListener("change", function () {
@@ -534,15 +857,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Reset to login form when modal is closed - Bootstrap 5 syntax
-  document
-    .getElementById("authModal")
-    .addEventListener("hidden.bs.modal", function () {
-      authToggle.checked = false;
-      loginForm.style.display = "block";
-      signupForm.style.display = "none";
-      modalTitleText.innerHTML = "Login to Your Account";
-    });
+  // Reset to login form when modal is closed
+  $("#authModal").on("hidden.bs.modal", function () {
+    authToggle.checked = false;
+    loginForm.style.display = "block";
+    signupForm.style.display = "none";
+    modalTitleText.innerHTML = "Login to Your Account";
+  });
+
+  // Check login status on page load
+  checkLoginStatus();
 });
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -852,18 +1176,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 // Get the product details and set them in the modal when the "Shop Now" button is clicked
 document.querySelectorAll(".shop-button").forEach((button) => {
-    button.addEventListener("click", function () {
-        const product = this.closest(".productt");
-        const productName = product.getAttribute("data-product-name");
-        const productPrice = product.getAttribute("data-product-price");
-        document.getElementById("modalProductName").textContent = productName;
-        document.getElementById("modalProductPrice").textContent = productPrice;
-        document.getElementById("totalPrice").textContent = productPrice;
-        
-        // Use Bootstrap 5 modal method to show the modal
-        const buyNowModal = new bootstrap.Modal(document.getElementById('buyNowModal'));
-        buyNowModal.show();
-    });
+  button.addEventListener("click", function () {
+    const product = this.closest(".productt");
+    const productName = product.getAttribute("data-product-name");
+    const productPrice = product.getAttribute("data-product-price");
+    document.getElementById("modalProductName").textContent = productName;
+    document.getElementById("modalProductPrice").textContent = productPrice;
+    document.getElementById("totalPrice").textContent = productPrice;
+
+    // Use Bootstrap 5 modal method to show the modal
+    const buyNowModal = new bootstrap.Modal(
+      document.getElementById("buyNowModal")
+    );
+    buyNowModal.show();
+  });
 });
 
 // Quantity selector functionality
@@ -874,70 +1200,914 @@ const totalPrice = document.getElementById("totalPrice");
 let pricePerUnit = 0;
 
 increaseButton.addEventListener("click", function () {
-    let currentQuantity = parseInt(quantityInput.value);
-    currentQuantity++;
-    quantityInput.value = currentQuantity;
-    updateTotalPrice(currentQuantity);
+  let currentQuantity = parseInt(quantityInput.value);
+  currentQuantity++;
+  quantityInput.value = currentQuantity;
+  updateTotalPrice(currentQuantity);
 });
 
 decreaseButton.addEventListener("click", function () {
-    let currentQuantity = parseInt(quantityInput.value);
-    if (currentQuantity > 1) {
-        currentQuantity--;
-        quantityInput.value = currentQuantity;
-        updateTotalPrice(currentQuantity);
-    }
+  let currentQuantity = parseInt(quantityInput.value);
+  if (currentQuantity > 1) {
+    currentQuantity--;
+    quantityInput.value = currentQuantity;
+    updateTotalPrice(currentQuantity);
+  }
 });
 
 // Helper function to update total price
 function updateTotalPrice(quantity) {
-    totalPrice.textContent = (quantity * pricePerUnit).toLocaleString('en-IN');
+  totalPrice.textContent = (quantity * pricePerUnit).toLocaleString("en-IN");
 }
 
 // Set the price per unit when the modal is shown - Bootstrap 5 syntax
-const buyNowModal = document.getElementById('buyNowModal');
-buyNowModal.addEventListener('shown.bs.modal', function () {
+const buyNowModal = document.getElementById("buyNowModal");
+buyNowModal.addEventListener("shown.bs.modal", function () {
   // Reset the form and quantity input first
   document.getElementById("orderForm").reset();
   quantityInput.value = "1";
 
   // Then get the updated price and update total price
-  pricePerUnit = parseInt(document.getElementById("modalProductPrice").textContent.replace(/[^\d]/g, ""));
+  pricePerUnit = parseInt(
+    document
+      .getElementById("modalProductPrice")
+      .textContent.replace(/[^\d]/g, "")
+  );
 
-  updateTotalPrice(1);  // use 1 since you just reset it
+  updateTotalPrice(1); // use 1 since you just reset it
 });
 
 // Place order button functionality
-document.getElementById("placeOrderButton").addEventListener("click", function () {
+document
+  .getElementById("placeOrderButton")
+  .addEventListener("click", function () {
     const form = document.getElementById("orderForm");
     if (form.checkValidity()) {
-        alert("Order placed successfully! This is a demo. In a real application, you would be redirected to payment processing.");
-        
-        // Hide modal using Bootstrap 5 method
-        const modal = bootstrap.Modal.getInstance(buyNowModal);
-        modal.hide();
+      alert(
+        "Order placed successfully! This is a demo. In a real application, you would be redirected to payment processing."
+      );
+
+      // Hide modal using Bootstrap 5 method
+      const modal = bootstrap.Modal.getInstance(buyNowModal);
+      modal.hide();
     } else {
-        form.reportValidity(); // Trigger validation
+      form.reportValidity(); // Trigger validation
     }
-});
+  });
 
 // Animation effects on scroll
-window.addEventListener('scroll', function () {
-    const cards = document.querySelectorAll('.product-card');
-    cards.forEach(card => {
-        const position = card.getBoundingClientRect();
-        if (position.top < window.innerHeight - 100) {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }
-    });
+window.addEventListener("scroll", function () {
+  const cards = document.querySelectorAll(".product-card");
+  cards.forEach((card) => {
+    const position = card.getBoundingClientRect();
+    if (position.top < window.innerHeight - 100) {
+      card.style.opacity = "1";
+      card.style.transform = "translateY(0)";
+    }
+  });
 });
 
 // Initialize all tooltips
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize tooltips
-    const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-    tooltipTriggerList.map(function (tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl);
-    });
+document.addEventListener("DOMContentLoaded", function () {
+  // Initialize tooltips
+  const tooltipTriggerList = [].slice.call(
+    document.querySelectorAll('[data-bs-toggle="tooltip"]')
+  );
+  tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl);
+  });
 });
+
+// Product Data
+const products = [
+  {
+    name: "Intel Core i9-12900K Desktop Processor",
+    originalPrice: 99999,
+    currentPrice: 74999,
+    image: "Images/i9.png",
+    rating: 4,
+    discount: "25% off",
+    category: "processor",
+  },
+  {
+    name: "Nvme 990 EVO SSD 1TB, PCIe 5.0 x2 M.2 2280",
+    originalPrice: 25279,
+    currentPrice: 20669,
+    image: "Images/Nvme SSD.png",
+    rating: 4.5,
+    category: "storage",
+  },
+  {
+    name: "DDR4 3200MHz 16GB RAM Memory | SO-DIMM",
+    originalPrice: 10999,
+    currentPrice: 8744,
+    image: "Images/Ram.png",
+    rating: 3.5,
+    category: "memory",
+  },
+  {
+    name: "MSI MPG B550 Gaming Plus AMD Ryzen 5000 Am4 Ddr4 ATX Motherboard",
+    originalPrice: 20700,
+    currentPrice: 16456,
+    image: "Images/motherboard.png",
+    rating: 3.5,
+    discount: "25% off",
+    category: "motherboard",
+  },
+  {
+    name: "Asus ROG Swift 27-Inch(68.6cm)FHD Monitor",
+    originalPrice: 88000,
+    currentPrice: 69960,
+    image: "Images/ASUS-ROG-Swift_prev_ui.png",
+    rating: 4,
+    discount: "25% off",
+    category: "peripheral",
+  },
+  {
+    name: "RPM Euro Games Gaming Keyboard",
+    originalPrice: 2480,
+    currentPrice: 1970,
+    image: "Images/keyboard.png",
+    rating: 4.5,
+    category: "peripheral",
+  },
+  {
+    name: "Zebronic RGB Gaming Mouse",
+    originalPrice: 749,
+    currentPrice: 550,
+    image: "Images/mouse.png",
+    rating: 4,
+    category: "peripheral",
+  },
+];
+
+// Cart to store items
+let cart = [];
+
+// Format price with commas for Indian currency format
+function formatPrice(price) {
+  return "₹ " + price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+// Generate star ratings
+function generateStars(rating) {
+  let stars = "";
+
+  for (let i = 1; i <= 5; i++) {
+    if (i <= Math.floor(rating)) {
+      // Full star
+      stars += '<i class="fas fa-star"></i>';
+    } else if (i - rating < 1 && i - rating > 0) {
+      // Half star
+      stars += '<i class="fas fa-star-half-alt"></i>';
+    } else {
+      // Empty star
+      stars += '<i class="far fa-star"></i>';
+    }
+  }
+
+  return stars;
+}
+
+// Render products
+function renderProducts() {
+  console.log("Rendering products function called");
+
+  const productsContainer = document.getElementById("productsContainer");
+  if (!productsContainer) {
+    console.error("Products container not found in the DOM");
+    // If the container doesn't exist yet, try again shortly
+    setTimeout(renderProducts, 100);
+    return;
+  }
+
+  console.log(
+    "Found products container, adding " + products.length + " products"
+  );
+  let productsHTML = "";
+
+  products.forEach((product, index) => {
+    productsHTML += `
+          <div class="col-lg-4 col-md-6 mb-4">
+              <div class="product-card" data-product-index="${index}">
+                  ${
+                    product.discount
+                      ? `<div class="discount-badge">${product.discount}</div>`
+                      : ""
+                  }
+                  <div class="product-img-container">
+                      <img src="${product.image}" alt="${
+      product.name
+    }" class="product-img">
+                  </div>
+                  <div class="product-details">
+                      <h3 class="product-title">${product.name}</h3>
+                      <div class="price-container">
+                          <span class="original-price">${formatPrice(
+                            product.originalPrice
+                          )}</span>
+                          <span class="current-price">${formatPrice(
+                            product.currentPrice
+                          )}</span>
+                      </div>
+                      <div class="ratings">
+                          ${generateStars(product.rating)}
+                      </div>
+                      <div class="product-actions">
+                          <button type="button" class="btn-cart add-to-cart">
+                              Add to Cart <i class="fas fa-plus ms-1"></i>
+                          </button>
+                          <button type="button" class="btn-buy buy-now" data-bs-toggle="modal" data-bs-target="#buyNowModal">
+                              Buy Now <i class="fas fa-shopping-cart ms-1"></i>
+                          </button>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      `;
+  });
+
+  productsContainer.innerHTML = productsHTML;
+
+  // Add event listeners to the Buy Now buttons
+  document.querySelectorAll(".buy-now").forEach((button) => {
+    button.addEventListener("click", function () {
+      const productCard = this.closest(".product-card");
+      if (!productCard) return; // Guard clause
+
+      const productIndex = productCard.dataset.productIndex;
+      const product = products[productIndex];
+
+      const modalProductName = document.getElementById("modalProductName");
+      const modalProductPrice = document.getElementById("modalProductPrice");
+
+      if (modalProductName) modalProductName.textContent = product.name;
+      if (modalProductPrice)
+        modalProductPrice.textContent = formatPrice(product.currentPrice);
+    });
+  });
+
+  // Add event listeners to the Add to Cart buttons
+  document.querySelectorAll(".add-to-cart").forEach((button) => {
+    button.addEventListener("click", function () {
+      const productCard = this.closest(".product-card");
+      if (!productCard) return; // Guard clause
+
+      const productIndex = productCard.dataset.productIndex;
+      addToCart(productIndex);
+    });
+  });
+}
+
+// Cart functionality
+function addToCart(productIndex) {
+  const product = products[productIndex];
+  if (!product) return; // Guard clause
+
+  // Check if product already exists in cart
+  const existingItemIndex = cart.findIndex(
+    (item) => item.productIndex == productIndex
+  );
+
+  if (existingItemIndex !== -1) {
+    // Product already in cart, increase quantity
+    cart[existingItemIndex].quantity++;
+  } else {
+    // Add new product to cart
+    cart.push({
+      productIndex: productIndex,
+      name: product.name,
+      price: product.currentPrice,
+      image: product.image,
+      quantity: 1,
+    });
+  }
+
+  updateCartUI();
+  showCartNotification();
+}
+
+function removeFromCart(index) {
+  if (index >= 0 && index < cart.length) {
+    cart.splice(index, 1);
+    updateCartUI();
+  }
+}
+
+function increaseQuantity(index) {
+  if (index >= 0 && index < cart.length) {
+    cart[index].quantity++;
+    updateCartUI();
+  }
+}
+
+function decreaseQuantity(index) {
+  if (index >= 0 && index < cart.length) {
+    if (cart[index].quantity > 1) {
+      cart[index].quantity--;
+    } else {
+      removeFromCart(index);
+    }
+    updateCartUI();
+  }
+}
+
+// Enhanced updateCartUI with animation for counter
+function updateCartUI() {
+  const cartItemsContainer = document.getElementById('cartItems');
+  const cartCountElements = document.querySelectorAll('.cart-count');
+  const cartSubtotalElement = document.getElementById('cartSubtotal');
+  const cartTaxElement = document.getElementById('cartTax');
+  const cartTotalElement = document.getElementById('cartTotal');
+
+  // Only update UI if elements exist
+  if (!cartItemsContainer) return;
+
+  // Update cart items display
+  let cartItemsHTML = '';
+
+  if (cart.length === 0) {
+    cartItemsHTML = '<p class="text-center py-5">Your cart is empty</p>';
+  } else {
+    cart.forEach((item, index) => {
+      cartItemsHTML += `
+        <div class="cart-item">
+          <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+          <div class="cart-item-details">
+            <h6 class="cart-item-title">${item.name}</h6>
+            <p class="cart-item-price">${formatPrice(item.price)}</p>
+            <div class="cart-item-actions">
+              <button class="quantity-btn" onclick="decreaseQuantity(${index})">-</button>
+              <span class="cart-quantity">${item.quantity}</span>
+              <button class="quantity-btn" onclick="increaseQuantity(${index})">+</button>
+              <span class="remove-item" onclick="removeFromCart(${index})">
+                <i class="fas fa-trash"></i>
+              </span>
+            </div>
+          </div>
+        </div>
+      `;
+    });
+  }
+
+  cartItemsContainer.innerHTML = cartItemsHTML;
+
+  // Calculate totals
+  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const tax = subtotal * 0.18; // 18% tax
+  const total = subtotal + tax + 499; // 499 is shipping cost
+
+  // Update cart count on ALL cart icons with animation
+  cartCountElements.forEach(countElement => {
+    if (countElement) {
+      // Store previous value to check if changed
+      const prevValue = parseInt(countElement.textContent);
+      
+      // Update text
+      countElement.textContent = cartCount;
+      
+      // Add animation if value changed
+      if (prevValue !== cartCount) {
+        // Remove animation class first (if exists)
+        countElement.classList.remove('cart-count-updated');
+        
+        // Force browser reflow to restart animation
+        void countElement.offsetWidth;
+        
+        // Add animation class
+        countElement.classList.add('cart-count-updated');
+      }
+    }
+  });
+
+  // Update cart summary if elements exist
+  if (cartSubtotalElement) cartSubtotalElement.textContent = formatPrice(subtotal);
+  if (cartTaxElement) cartTaxElement.textContent = formatPrice(tax);
+  if (cartTotalElement) cartTotalElement.textContent = formatPrice(total);
+}
+
+// Enhanced showCartNotification with better animation
+function showCartNotification() {
+  // Create a notification element
+  const notification = document.createElement('div');
+  notification.className = 'alert alert-success alert-dismissible fade';
+  notification.style.position = 'fixed';
+  notification.style.top = '20px';
+  notification.style.right = '20px'; // Start off-screen
+  notification.style.zIndex = '1060';
+  // notification.style.transition = 'right 0.3s ease-in-out';
+  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  notification.innerHTML = `
+      <strong>Success!</strong> Item added to cart.
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  `;
+
+  // Add notification to the body
+  document.body.appendChild(notification);
+  
+  // Force browser reflow
+  void notification.offsetWidth;
+  
+  // Slide in
+  notification.classList.add('show');
+  notification.style.right = '20px';
+
+  // Remove notification after 3 seconds
+  setTimeout(() => {
+    notification.style.right = '-300px';
+    setTimeout(() => {
+        notification.remove();
+    }, 300);
+  }, 3000);
+}
+
+// Search functionality
+function searchProducts() {
+  const searchInput = document.getElementById("searchInput");
+  if (!searchInput) return;
+
+  const searchValue = searchInput.value.toLowerCase();
+  const productCards = document.querySelectorAll(".product-card");
+
+  productCards.forEach((card) => {
+    const productTitle = card.querySelector(".product-title");
+    if (!productTitle) return;
+
+    const productName = productTitle.textContent.toLowerCase();
+
+    if (productName.includes(searchValue)) {
+      card.style.display = "block";
+    } else {
+      card.style.display = "none";
+    }
+  });
+}
+
+// Synchronize search inputs across different navbar versions
+function syncSearchInputs() {
+  const searchInput = document.getElementById('searchInput');
+  const mobileSearchInput = document.getElementById('mobileSearchInput');
+  const scrollSearchInput = document.getElementById('scrollSearchInput');
+  
+  // Determine which input triggered the event
+  let sourceValue = '';
+  if (document.activeElement === searchInput && searchInput) {
+    sourceValue = searchInput.value;
+  } else if (document.activeElement === mobileSearchInput && mobileSearchInput) {
+    sourceValue = mobileSearchInput.value;
+  } else if (document.activeElement === scrollSearchInput && scrollSearchInput) {
+    sourceValue = scrollSearchInput.value;
+  }
+  
+  // Update all inputs with the source value
+  if (searchInput && document.activeElement !== searchInput) {
+    searchInput.value = sourceValue;
+  }
+  if (mobileSearchInput && document.activeElement !== mobileSearchInput) {
+    mobileSearchInput.value = sourceValue;
+  }
+  if (scrollSearchInput && document.activeElement !== scrollSearchInput) {
+    scrollSearchInput.value = sourceValue;
+  }
+  
+  // Perform search after syncing
+  searchProducts();
+}
+
+// Filter functionality
+function addFilterOptions() {
+  const productsSection = document.querySelector(".products .container");
+  if (!productsSection) return;
+
+  // Check if filter container already exists
+  if (productsSection.querySelector(".filter-container")) return;
+
+  const filterContainer = document.createElement("div");
+  filterContainer.className = "filter-container mb-4";
+  filterContainer.innerHTML = `
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <select class="form-select" id="sortFilter">
+          <option value="">Sort By</option>
+          <option value="price-low">Price: Low to High</option>
+          <option value="price-high">Price: High to Low</option>
+          <option value="rating">Rating</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-3">
+        <select class="form-select" id="categoryFilter">
+          <option value="">All Categories</option>
+          <option value="processor">Processors</option>
+          <option value="storage">Storage</option>
+          <option value="memory">Memory</option>
+          <option value="motherboard">Motherboards</option>
+          <option value="peripheral">Peripherals</option>
+        </select>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="input-group">
+          <span class="input-group-text">Price Range</span>
+          <input type="number" class="form-control" placeholder="Min" id="minPrice">
+          <input type="number" class="form-control" placeholder="Max" id="maxPrice">
+          <button class="btn btn-primary" id="applyPriceFilter">Apply</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const sectionTitle = productsSection.querySelector(".section-title");
+  if (sectionTitle) {
+    productsSection.insertBefore(filterContainer, sectionTitle.nextSibling);
+  } else {
+    productsSection.appendChild(filterContainer);
+  }
+
+  // Add event listeners to filters
+  const sortFilter = document.getElementById("sortFilter");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const applyPriceFilter = document.getElementById("applyPriceFilter");
+
+  if (sortFilter) sortFilter.addEventListener("change", filterProducts);
+  if (categoryFilter) categoryFilter.addEventListener("change", filterProducts);
+  if (applyPriceFilter)
+    applyPriceFilter.addEventListener("click", filterProducts);
+}
+
+function filterProducts() {
+  const sortFilter = document.getElementById("sortFilter");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const minPriceInput = document.getElementById("minPrice");
+  const maxPriceInput = document.getElementById("maxPrice");
+
+  if (!sortFilter || !categoryFilter || !minPriceInput || !maxPriceInput) {
+    console.log("Filter elements not found, rendering all products");
+    renderProducts();
+    return;
+  }
+
+  const sortValue = sortFilter.value;
+  const categoryValue = categoryFilter.value;
+  const minPrice = minPriceInput.value;
+  const maxPrice = maxPriceInput.value;
+
+  // If no filters are applied, just render all products
+  if (!sortValue && !categoryValue && !minPrice && !maxPrice) {
+    console.log("No filters applied, rendering all products");
+    renderProducts();
+    return;
+  }
+
+  let filteredProducts = [...products];
+
+  // Filter by category
+  if (categoryValue) {
+    filteredProducts = filteredProducts.filter((p) => {
+      if (p.category) {
+        return p.category === categoryValue;
+      } else {
+        // Fallback to name-based filtering if category not set
+        if (categoryValue === "processor") {
+          return p.name.toLowerCase().includes("processor");
+        } else if (categoryValue === "storage") {
+          return p.name.toLowerCase().includes("ssd");
+        } else if (categoryValue === "memory") {
+          return p.name.toLowerCase().includes("ram");
+        } else if (categoryValue === "motherboard") {
+          return p.name.toLowerCase().includes("motherboard");
+        } else if (categoryValue === "peripheral") {
+          return (
+            p.name.toLowerCase().includes("keyboard") ||
+            p.name.toLowerCase().includes("mouse") ||
+            p.name.toLowerCase().includes("monitor")
+          );
+        }
+      }
+      return false;
+    });
+  }
+
+  // Filter by price range
+  if (minPrice) {
+    filteredProducts = filteredProducts.filter(
+      (p) => p.currentPrice >= parseInt(minPrice)
+    );
+  }
+
+  if (maxPrice) {
+    filteredProducts = filteredProducts.filter(
+      (p) => p.currentPrice <= parseInt(maxPrice)
+    );
+  }
+
+  // Sort products
+  if (sortValue === "price-low") {
+    filteredProducts.sort((a, b) => a.currentPrice - b.currentPrice);
+  } else if (sortValue === "price-high") {
+    filteredProducts.sort((a, b) => b.currentPrice - a.currentPrice);
+  } else if (sortValue === "rating") {
+    filteredProducts.sort((a, b) => b.rating - a.rating);
+  }
+
+  // Render filtered products
+  const productsContainer = document.getElementById("productsContainer");
+  if (!productsContainer) return;
+
+  let productsHTML = "";
+
+  if (filteredProducts.length === 0) {
+    productsHTML =
+      '<div class="col-12 text-center py-5"><h4>No products found matching your criteria</h4></div>';
+  } else {
+    filteredProducts.forEach((product, index) => {
+      // Find the original index in the products array
+      const originalIndex = products.findIndex((p) => p.name === product.name);
+
+      productsHTML += `
+              <div class="col-lg-4 col-md-6 mb-4">
+                  <div class="product-card" data-product-index="${originalIndex}">
+                      ${
+                        product.discount
+                          ? `<div class="discount-badge">${product.discount}</div>`
+                          : ""
+                      }
+                      <div class="product-img-container">
+                          <img src="${product.image}" alt="${
+        product.name
+      }" class="product-img">
+                      </div>
+                      <div class="product-details">
+                          <h3 class="product-title">${product.name}</h3>
+                          <div class="price-container">
+                              <span class="original-price">${formatPrice(
+                                product.originalPrice
+                              )}</span>
+                              <span class="current-price">${formatPrice(
+                                product.currentPrice
+                              )}</span>
+                          </div>
+                          <div class="ratings">
+                              ${generateStars(product.rating)}
+                          </div>
+                          <div class="product-actions">
+                              <button type="button" class="btn-cart add-to-cart">
+                                  Add to Cart <i class="fas fa-plus ms-1"></i>
+                              </button>
+                              <button type="button" class="btn-buy buy-now" data-bs-toggle="modal" data-bs-target="#buyNowModal">
+                                  Buy Now <i class="fas fa-shopping-cart ms-1"></i>
+                              </button>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          `;
+    });
+  }
+
+  productsContainer.innerHTML = productsHTML;
+
+  // Reattach event listeners
+  document.querySelectorAll(".buy-now").forEach((button) => {
+    button.addEventListener("click", function () {
+      const productCard = this.closest(".product-card");
+      if (!productCard) return;
+
+      const productIndex = productCard.dataset.productIndex;
+      const product = products[productIndex];
+
+      const modalProductName = document.getElementById("modalProductName");
+      const modalProductPrice = document.getElementById("modalProductPrice");
+
+      if (modalProductName) modalProductName.textContent = product.name;
+      if (modalProductPrice)
+        modalProductPrice.textContent = formatPrice(product.currentPrice);
+    });
+  });
+
+  document.querySelectorAll(".add-to-cart").forEach((button) => {
+    button.addEventListener("click", function () {
+      const productCard = this.closest(".product-card");
+      if (!productCard) return;
+
+      const productIndex = productCard.dataset.productIndex;
+      addToCart(productIndex);
+    });
+  });
+}
+
+// Enhanced Cart sidebar functionality with smooth animations
+function setupCartSidebar() {
+  // Get all cart icons
+  const cartIcon = document.getElementById('cartIcon');
+  const mobileCartIcon = document.getElementById('mobileCartIcon');
+  const scrollCartIcon = document.getElementById('scrollCartIcon');
+  
+  const cartSidebar = document.getElementById('cartSidebar');
+  const cartOverlay = document.getElementById('cartOverlay');
+  const closeCart = document.getElementById('closeCart');
+
+  function openCart() {
+    if (cartSidebar && cartOverlay) {
+      // Add active class to trigger CSS transitions
+      cartOverlay.classList.add('active');
+      
+      // Small delay for overlay to start showing before cart slides in
+      setTimeout(() => {
+        cartSidebar.classList.add('active');
+      }, 50);
+      
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  function closeCartSidebar() {
+    if (cartSidebar && cartOverlay) {
+      // Remove active class from cart first
+      cartSidebar.classList.remove('active');
+      
+      // Small delay before hiding overlay (matches transition time)
+      setTimeout(() => {
+        cartOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+      }, 300);
+    }
+  }
+
+  // Add event listeners to all cart icons
+  if (cartIcon) {
+    cartIcon.addEventListener('click', openCart);
+  }
+  
+  if (mobileCartIcon) {
+    mobileCartIcon.addEventListener('click', openCart);
+  }
+  
+  if (scrollCartIcon) {
+    scrollCartIcon.addEventListener('click', openCart);
+  }
+  
+  if (closeCart) {
+    closeCart.addEventListener('click', closeCartSidebar);
+  }
+  
+  if (cartOverlay) {
+    cartOverlay.addEventListener('click', closeCartSidebar);
+  }
+  
+  // Add escape key support to close cart
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && cartSidebar.classList.contains('active')) {
+      closeCartSidebar();
+    }
+  });
+}
+
+// Hero section animation
+function setupHeroAnimation() {
+  const heroSection = document.querySelector(".hero");
+  if (heroSection) {
+    heroSection.style.opacity = "0";
+    heroSection.style.transform = "translateY(20px)";
+    heroSection.style.transition = "opacity 1s ease, transform 1s ease";
+
+    setTimeout(() => {
+      heroSection.style.opacity = "1";
+      heroSection.style.transform = "translateY(0)";
+    }, 200);
+  }
+}
+
+// Product card animations
+function setupProductCardAnimations() {
+  const productCards = document.querySelectorAll(".product-card");
+
+  if (productCards.length > 0) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    productCards.forEach((card) => {
+      card.style.opacity = "0";
+      card.style.transform = "translateY(20px)";
+      card.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+      observer.observe(card);
+    });
+  }
+}
+
+// Initialize everything when DOM is loaded
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("DOM fully loaded - starting to render products");
+
+  // Force render all products immediately
+  renderProducts();
+
+  // Initialize the page
+  updateCartUI();
+  setupCartSidebar();
+  setupHeroAnimation();
+
+  // Add filter options if products section exists
+  const productsSection = document.querySelector(".products .container");
+  if (productsSection) {
+    addFilterOptions();
+  }
+
+  // Add search functionality
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("input", searchProducts);
+  }
+
+  // Reset filters when page loads
+  const sortFilter = document.getElementById("sortFilter");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const minPriceInput = document.getElementById("minPrice");
+  const maxPriceInput = document.getElementById("maxPrice");
+
+  if (sortFilter) sortFilter.value = "";
+  if (categoryFilter) categoryFilter.value = "";
+  if (minPriceInput) minPriceInput.value = "";
+  if (maxPriceInput) maxPriceInput.value = "";
+
+  // Setup animations after a short delay to ensure products are rendered
+  setTimeout(() => {
+    console.log("Setting up product card animations");
+    setupProductCardAnimations();
+  }, 500);
+});
+
+// Ensure products container exists
+function ensureProductsContainer() {
+  console.log("Checking for products container");
+  let productsContainer = document.getElementById("productsContainer");
+
+  // If container doesn't exist, try to find a suitable container or create one
+  if (!productsContainer) {
+    console.log("Products container not found, looking for alternatives");
+
+    // Try to find products section
+    const productsSection = document.querySelector(".products");
+    if (productsSection) {
+      // Look for container inside products section
+      let container = productsSection.querySelector(".container");
+
+      if (!container) {
+        // Create container if it doesn't exist
+        container = document.createElement("div");
+        container.className = "container";
+        productsSection.appendChild(container);
+      }
+
+      // Add row for products
+      let row = container.querySelector(".row");
+      if (!row) {
+        row = document.createElement("div");
+        row.className = "row";
+        container.appendChild(row);
+      }
+
+      // Set ID to row
+      row.id = "productsContainer";
+      console.log("Created products container");
+    } else {
+      // If no products section exists, create one in the body
+      console.log("Creating entire products section structure");
+      const section = document.createElement("section");
+      section.className = "products py-5";
+
+      const container = document.createElement("div");
+      container.className = "container";
+
+      const title = document.createElement("h2");
+      title.className = "section-title text-center mb-5";
+      title.textContent = "Our Products";
+
+      const row = document.createElement("div");
+      row.className = "row";
+      row.id = "productsContainer";
+
+      container.appendChild(title);
+      container.appendChild(row);
+      section.appendChild(container);
+
+      // Add to body
+      document.body.appendChild(section);
+    }
+  } else {
+    console.log("Products container found with ID");
+  }
+}
+
+// Also render products immediately (outside of DOMContentLoaded)
+console.log("Script loaded - attempting immediate product render");
+ensureProductsContainer();
+renderProducts();

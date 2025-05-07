@@ -1,0 +1,270 @@
+:root {
+    --primary-color: #2506ad;
+    --secondary-color: #5b28d6;
+    --accent-color: #9c5bf2;
+    --dark-bg: #130d24;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-color: #333333;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: var(--text-color);
+    background-color: var(--light-bg);
+}
+
+.about-section {
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(37, 6, 173, 0.05) 0%, rgba(156, 91, 242, 0.1) 100%);
+    z-index: -1;
+}
+
+.heading {
+    font-weight: 700;
+    margin-bottom: 40px;
+    position: relative;
+    display: inline-block;
+    color: var(--primary-color);
+}
+
+.heading span {
+    color: var(--accent-color);
+}
+
+.heading::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 40px;
+    width: 70px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+    border-radius: 2px;
+}
+
+.feature-icon-box {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--card-bg);
+    box-shadow: 0 10px 30px rgba(37, 6, 173, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 30px;
+}
+
+.feature-icon-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(37, 6, 173, 0.15);
+}
+
+.icon-container {
+    margin: 0 auto;
+    width: 120px;
+    height: 120px;
+    position: relative;
+}
+
+.hexagon {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.hexagon:hover {
+    transform: rotate(30deg);
+}
+
+.hexagon::after {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 5px;
+    background: white;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    z-index: 1;
+}
+
+.pc-icon, .gpu-icon, .support-icon {
+    position: relative;
+    z-index: 2;
+    width: 60px;
+    height: 60px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.pc-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b28d6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='4' y='3' width='16' height='16' rx='2'/%3E%3Crect x='8' y='7' width='8' height='8' rx='1'/%3E%3Cline x1='12' y1='19' x2='12' y2='21'/%3E%3Cline x1='8' y1='22' x2='16' y2='22'/%3E%3C/svg%3E");
+}
+
+.gpu-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b28d6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='6' width='20' height='12' rx='2'/%3E%3Cline x1='6' y1='12' x2='18' y2='12'/%3E%3Cline x1='8' y1='18' x2='8' y2='22'/%3E%3Cline x1='16' y1='18' x2='16' y2='22'/%3E%3C/svg%3E");
+}
+
+.support-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235b28d6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'/%3E%3C/svg%3E");
+}
+
+.feature-title {
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 20px;
+    margin: 15px 0;
+}
+
+.feature-text {
+    color: var(--text-color);
+    font-size: 15px;
+}
+
+.about-section p {
+    line-height: 1.8;
+    margin-bottom: 25px;
+    text-align: justify;
+}
+
+.card-section {
+    margin-top: 60px;
+}
+
+.info-card {
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    padding: 30px;
+    height: 100%;
+    box-shadow: 0 10px 30px rgba(37, 6, 173, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 4px solid var(--primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.vision-card {
+    border-top-color: var(--primary-color);
+}
+
+.mission-card {
+    border-top-color: var(--secondary-color);
+}
+
+.goals-card {
+    border-top-color: var(--accent-color);
+}
+
+.info-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: linear-gradient(135deg, rgba(37, 6, 173, 0.05) 0%, rgba(156, 91, 242, 0.1) 100%);
+    transition: height 0.3s ease;
+    z-index: 0;
+}
+
+.info-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(37, 6, 173, 0.15);
+}
+
+.info-card:hover::before {
+    height: 100%;
+}
+
+.info-card h2 {
+    color: var(--primary-color);
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.vision-card h2 {
+    color: var(--primary-color);
+}
+
+.mission-card h2 {
+    color: var(--secondary-color);
+}
+
+.goals-card h2 {
+    color: var(--accent-color);
+}
+
+.info-card ul {
+    list-style-type: none;
+    padding-left: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.info-card li {
+    margin-bottom: 15px;
+    padding-left: 30px;
+    position: relative;
+}
+
+.info-card li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 15px;
+    height: 15px;
+    background-color: var(--accent-color);
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+    mask-size: contain;
+    -webkit-mask-size: contain;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+}
+
+.vision-card li::before {
+    background-color: var(--primary-color);
+}
+
+.mission-card li::before {
+    background-color: var(--secondary-color);
+}
+
+.goals-card li::before {
+    background-color: var(--accent-color);
+}
+
+@media (max-width: 768px) {
+    .about-section {
+        padding: 50px 0;
+    }
+    
+    .info-card {
+        margin-bottom: 30px;
+    }
+
+    .feature-icon-box {
+        max-width: 80%;
+        margin: 0 auto 30px;
+    }
+}
