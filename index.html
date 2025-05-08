@@ -333,7 +333,18 @@
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
                     <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link custom-dropdown-toggle" href="javascript:void(0)" id="productsDropdown"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Products <i class="fas fa-caret-down ms-1"></i>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="productsDropdown">
+                            <li><a class="dropdown-item" href="#prebuilt">Pre Built Gaming PCs</a></li>
+                            <li><a class="dropdown-item" href="#parts">PC Parts & Peripherals</a></li>
+                        </ul>
+                    </li>
+
                     <li class="nav-item"><a class="nav-link" href="#build">Build PC</a></li>
                     <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
                 </ul>
@@ -349,8 +360,7 @@
                     </div>
 
                     <!-- Cart Button for Desktop -->
-                    <div class="cart-icon desktop-cart-icon me-4 text-white fs-5"  id="cartIcon"
-                        title="Your Cart">
+                    <div class="cart-icon desktop-cart-icon me-4 text-white fs-5" id="cartIcon" title="Your Cart">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count">0</span>
                     </div>
@@ -487,7 +497,20 @@
                 <!-- Remove data-bs-dismiss from all these links -->
                 <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="#about">About Us</a></li>
-                <li class="nav-item"><a class="nav-link" href="#products">Products</a></li>
+
+                <!-- Products dropdown for mobile -->
+                <li class="nav-item mobile-dropdown">
+                    <a class="nav-link custom-mobile-dropdown d-flex align-items-center justify-content-between"
+                        href="javascript:void(0)">
+                        Products
+                        <i class="fas fa-caret-down mobile-dropdown-toggle"></i>
+                    </a>
+                    <ul class="mobile-dropdown-menu">
+                        <li><a class="nav-link" href="#prebuilt">Pre Built Gaming PCs</a></li>
+                        <li><a class="nav-link" href="#parts">PC Parts & Peripherals</a></li>
+                    </ul>
+                </li>
+                
                 <li class="nav-item"><a class="nav-link" href="#build">Build PC</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
             </ul>
@@ -510,7 +533,7 @@
         </div>
     </section>
 
-    <section class="product-section py-5" id="products">
+    <section class="product-section py-5" id="prebuilt">
         <div class="container">
             <h2 class="section-title text-center mb-3">Custom Core Prebuilt Gaming PCs</h2>
             <p class="section-description text-center mb-4">We use the latest generation performance components and
@@ -656,8 +679,8 @@
         </div>
     </section>
 
-     <!-- Products Section -->
-     <section class="products py-5">
+    <!-- Products Section -->
+    <section class="products py-5" id="parts">
         <div class="container">
             <h2 class="section-title mb-5">Featured Products</h2>
 

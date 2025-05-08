@@ -1514,17 +1514,17 @@ function decreaseQuantity(index) {
 
 // Enhanced updateCartUI with animation for counter
 function updateCartUI() {
-  const cartItemsContainer = document.getElementById('cartItems');
-  const cartCountElements = document.querySelectorAll('.cart-count');
-  const cartSubtotalElement = document.getElementById('cartSubtotal');
-  const cartTaxElement = document.getElementById('cartTax');
-  const cartTotalElement = document.getElementById('cartTotal');
+  const cartItemsContainer = document.getElementById("cartItems");
+  const cartCountElements = document.querySelectorAll(".cart-count");
+  const cartSubtotalElement = document.getElementById("cartSubtotal");
+  const cartTaxElement = document.getElementById("cartTax");
+  const cartTotalElement = document.getElementById("cartTotal");
 
   // Only update UI if elements exist
   if (!cartItemsContainer) return;
 
   // Update cart items display
-  let cartItemsHTML = '';
+  let cartItemsHTML = "";
 
   if (cart.length === 0) {
     cartItemsHTML = '<p class="text-center py-5">Your cart is empty</p>';
@@ -1554,35 +1554,39 @@ function updateCartUI() {
 
   // Calculate totals
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
-  const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  const subtotal = cart.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
   const tax = subtotal * 0.18; // 18% tax
   const total = subtotal + tax + 499; // 499 is shipping cost
 
   // Update cart count on ALL cart icons with animation
-  cartCountElements.forEach(countElement => {
+  cartCountElements.forEach((countElement) => {
     if (countElement) {
       // Store previous value to check if changed
       const prevValue = parseInt(countElement.textContent);
-      
+
       // Update text
       countElement.textContent = cartCount;
-      
+
       // Add animation if value changed
       if (prevValue !== cartCount) {
         // Remove animation class first (if exists)
-        countElement.classList.remove('cart-count-updated');
-        
+        countElement.classList.remove("cart-count-updated");
+
         // Force browser reflow to restart animation
         void countElement.offsetWidth;
-        
+
         // Add animation class
-        countElement.classList.add('cart-count-updated');
+        countElement.classList.add("cart-count-updated");
       }
     }
   });
 
   // Update cart summary if elements exist
-  if (cartSubtotalElement) cartSubtotalElement.textContent = formatPrice(subtotal);
+  if (cartSubtotalElement)
+    cartSubtotalElement.textContent = formatPrice(subtotal);
   if (cartTaxElement) cartTaxElement.textContent = formatPrice(tax);
   if (cartTotalElement) cartTotalElement.textContent = formatPrice(total);
 }
@@ -1590,14 +1594,14 @@ function updateCartUI() {
 // Enhanced showCartNotification with better animation
 function showCartNotification() {
   // Create a notification element
-  const notification = document.createElement('div');
-  notification.className = 'alert alert-success alert-dismissible fade';
-  notification.style.position = 'fixed';
-  notification.style.top = '20px';
-  notification.style.right = '20px'; // Start off-screen
-  notification.style.zIndex = '1060';
+  const notification = document.createElement("div");
+  notification.className = "alert alert-success alert-dismissible fade";
+  notification.style.position = "fixed";
+  notification.style.top = "20px";
+  notification.style.right = "20px"; // Start off-screen
+  notification.style.zIndex = "1060";
   // notification.style.transition = 'right 0.3s ease-in-out';
-  notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+  notification.style.boxShadow = "0 4px 12px rgba(0,0,0,0.15)";
   notification.innerHTML = `
       <strong>Success!</strong> Item added to cart.
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -1605,19 +1609,19 @@ function showCartNotification() {
 
   // Add notification to the body
   document.body.appendChild(notification);
-  
+
   // Force browser reflow
   void notification.offsetWidth;
-  
+
   // Slide in
-  notification.classList.add('show');
-  notification.style.right = '20px';
+  notification.classList.add("show");
+  notification.style.right = "20px";
 
   // Remove notification after 3 seconds
   setTimeout(() => {
-    notification.style.right = '-300px';
+    notification.style.right = "-300px";
     setTimeout(() => {
-        notification.remove();
+      notification.remove();
     }, 300);
   }, 3000);
 }
@@ -1646,20 +1650,26 @@ function searchProducts() {
 
 // Synchronize search inputs across different navbar versions
 function syncSearchInputs() {
-  const searchInput = document.getElementById('searchInput');
-  const mobileSearchInput = document.getElementById('mobileSearchInput');
-  const scrollSearchInput = document.getElementById('scrollSearchInput');
-  
+  const searchInput = document.getElementById("searchInput");
+  const mobileSearchInput = document.getElementById("mobileSearchInput");
+  const scrollSearchInput = document.getElementById("scrollSearchInput");
+
   // Determine which input triggered the event
-  let sourceValue = '';
+  let sourceValue = "";
   if (document.activeElement === searchInput && searchInput) {
     sourceValue = searchInput.value;
-  } else if (document.activeElement === mobileSearchInput && mobileSearchInput) {
+  } else if (
+    document.activeElement === mobileSearchInput &&
+    mobileSearchInput
+  ) {
     sourceValue = mobileSearchInput.value;
-  } else if (document.activeElement === scrollSearchInput && scrollSearchInput) {
+  } else if (
+    document.activeElement === scrollSearchInput &&
+    scrollSearchInput
+  ) {
     sourceValue = scrollSearchInput.value;
   }
-  
+
   // Update all inputs with the source value
   if (searchInput && document.activeElement !== searchInput) {
     searchInput.value = sourceValue;
@@ -1670,7 +1680,7 @@ function syncSearchInputs() {
   if (scrollSearchInput && document.activeElement !== scrollSearchInput) {
     scrollSearchInput.value = sourceValue;
   }
-  
+
   // Perform search after syncing
   searchProducts();
 }
@@ -1898,65 +1908,65 @@ function filterProducts() {
 // Enhanced Cart sidebar functionality with smooth animations
 function setupCartSidebar() {
   // Get all cart icons
-  const cartIcon = document.getElementById('cartIcon');
-  const mobileCartIcon = document.getElementById('mobileCartIcon');
-  const scrollCartIcon = document.getElementById('scrollCartIcon');
-  
-  const cartSidebar = document.getElementById('cartSidebar');
-  const cartOverlay = document.getElementById('cartOverlay');
-  const closeCart = document.getElementById('closeCart');
+  const cartIcon = document.getElementById("cartIcon");
+  const mobileCartIcon = document.getElementById("mobileCartIcon");
+  const scrollCartIcon = document.getElementById("scrollCartIcon");
+
+  const cartSidebar = document.getElementById("cartSidebar");
+  const cartOverlay = document.getElementById("cartOverlay");
+  const closeCart = document.getElementById("closeCart");
 
   function openCart() {
     if (cartSidebar && cartOverlay) {
       // Add active class to trigger CSS transitions
-      cartOverlay.classList.add('active');
-      
+      cartOverlay.classList.add("active");
+
       // Small delay for overlay to start showing before cart slides in
       setTimeout(() => {
-        cartSidebar.classList.add('active');
+        cartSidebar.classList.add("active");
       }, 50);
-      
-      document.body.style.overflow = 'hidden';
+
+      document.body.style.overflow = "hidden";
     }
   }
 
   function closeCartSidebar() {
     if (cartSidebar && cartOverlay) {
       // Remove active class from cart first
-      cartSidebar.classList.remove('active');
-      
+      cartSidebar.classList.remove("active");
+
       // Small delay before hiding overlay (matches transition time)
       setTimeout(() => {
-        cartOverlay.classList.remove('active');
-        document.body.style.overflow = '';
+        cartOverlay.classList.remove("active");
+        document.body.style.overflow = "";
       }, 300);
     }
   }
 
   // Add event listeners to all cart icons
   if (cartIcon) {
-    cartIcon.addEventListener('click', openCart);
+    cartIcon.addEventListener("click", openCart);
   }
-  
+
   if (mobileCartIcon) {
-    mobileCartIcon.addEventListener('click', openCart);
+    mobileCartIcon.addEventListener("click", openCart);
   }
-  
+
   if (scrollCartIcon) {
-    scrollCartIcon.addEventListener('click', openCart);
+    scrollCartIcon.addEventListener("click", openCart);
   }
-  
+
   if (closeCart) {
-    closeCart.addEventListener('click', closeCartSidebar);
+    closeCart.addEventListener("click", closeCartSidebar);
   }
-  
+
   if (cartOverlay) {
-    cartOverlay.addEventListener('click', closeCartSidebar);
+    cartOverlay.addEventListener("click", closeCartSidebar);
   }
-  
+
   // Add escape key support to close cart
-  document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && cartSidebar.classList.contains('active')) {
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && cartSidebar.classList.contains("active")) {
       closeCartSidebar();
     }
   });
@@ -2111,3 +2121,365 @@ function ensureProductsContainer() {
 console.log("Script loaded - attempting immediate product render");
 ensureProductsContainer();
 renderProducts();
+
+// =====================================================
+//  DROPDOWN FUNCTIONALITY
+// =====================================================
+
+document.addEventListener("DOMContentLoaded", function () {
+  // =====================================================
+  // MANAGE ACTIVE STATE FOR ALL NAV LINKS
+  // =====================================================
+  const allNavLinks = document.querySelectorAll(
+    ".navbar-nav .nav-link:not(.dropdown-toggle):not(.custom-dropdown-toggle)"
+  );
+  const dropdownToggles = document.querySelectorAll(
+    ".navbar-nav .dropdown-toggle, .navbar-nav .custom-dropdown-toggle"
+  );
+
+  // Handle regular nav link clicks
+  allNavLinks.forEach((link) => {
+    link.addEventListener("click", function (e) {
+      // Clear active class from all nav links
+      clearActiveStates();
+
+      // Add active class to clicked link
+      this.classList.add("active");
+
+      // Store active page/section
+      sessionStorage.setItem("activePage", this.getAttribute("href"));
+      sessionStorage.removeItem("activeNavSection");
+    });
+  });
+
+  // Helper function to clear all active states
+  function clearActiveStates() {
+    allNavLinks.forEach((link) => link.classList.remove("active"));
+    dropdownToggles.forEach((toggle) => toggle.classList.remove("active"));
+  }
+
+  // =====================================================
+  // DESKTOP DROPDOWN FUNCTIONALITY
+  // =====================================================
+  const dropdowns = document.querySelectorAll(".navbar-nav .dropdown");
+
+  dropdowns.forEach((dropdown) => {
+    const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+    const dropdownToggle = dropdown.querySelector(
+      ".dropdown-toggle, .custom-dropdown-toggle"
+    );
+    let timeout;
+
+    // Add hover persistence for desktop
+    dropdown.addEventListener("mouseenter", function () {
+      if (window.innerWidth >= 992) {
+        clearTimeout(timeout);
+        dropdown.classList.add("show");
+        dropdownMenu.classList.add("show");
+      }
+    });
+
+    // Add slight delay before closing on mouseleave
+    dropdown.addEventListener("mouseleave", function () {
+      if (window.innerWidth >= 992) {
+        timeout = setTimeout(function () {
+          dropdown.classList.remove("show");
+          dropdownMenu.classList.remove("show");
+        }, 200); // 200ms delay before closing
+      }
+    });
+
+    // Add click handler for dropdown links
+    const dropdownLinks = dropdown.querySelectorAll(
+      ".dropdown-menu .nav-link, .dropdown-menu .dropdown-item"
+    );
+    dropdownLinks.forEach((link) => {
+      link.addEventListener("click", function (e) {
+        // Don't prevent default to allow navigation to anchor
+
+        // Close dropdown when clicking a link
+        dropdown.classList.remove("show");
+        dropdownMenu.classList.remove("show");
+
+        // If using Bootstrap's API
+        if (typeof bootstrap !== "undefined") {
+          const bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
+          if (bsDropdown) {
+            bsDropdown.hide();
+          }
+        }
+
+        // Clear active states and set current dropdown toggle as active
+        clearActiveStates();
+        dropdownToggle.classList.add("active");
+
+        // Store the active section in sessionStorage
+        sessionStorage.setItem("activeNavSection", link.getAttribute("href"));
+        sessionStorage.removeItem("activePage");
+
+        // If there's a mobile sidebar, close it as well
+        if (window.innerWidth < 992 && typeof bootstrap !== "undefined") {
+          const mobileSidebar = document.getElementById("mobileSidebar");
+          if (mobileSidebar) {
+            const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileSidebar);
+            if (bsOffcanvas) {
+              bsOffcanvas.hide();
+            }
+          }
+        }
+      });
+    });
+  });
+
+  // =====================================================
+  // MOBILE DROPDOWN FUNCTIONALITY
+  // =====================================================
+  // Wait for the DOM to be fully loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    // Simple focused script to fix mobile dropdown functionality
+    const mobileDropdowns = document.querySelectorAll(".mobile-dropdown");
+
+    // First, add CSS for mobile dropdown styling
+    const mobileStyle = document.createElement("style");
+    mobileStyle.textContent = `
+    /* Default state - dropdown menu is hidden */
+    .mobile-dropdown .mobile-dropdown-menu {
+      display: none;
+      padding-left: 15px;
+      margin-top: 5px;
+    }
+    
+    /* Active state - dropdown menu is visible */
+    .mobile-dropdown.active .mobile-dropdown-menu {
+      display: block;
+    }
+    
+    /* Rotate the dropdown icon when active */
+    .mobile-dropdown.active .mobile-dropdown-toggle {
+      transform: rotate(180deg);
+    }
+    
+    /* Smooth transition for the icon */
+    .mobile-dropdown-toggle {
+      transition: transform 0.3s ease;
+    }
+  `;
+    document.head.appendChild(mobileStyle);
+
+    // Add click handler for each mobile dropdown
+    mobileDropdowns.forEach((dropdown) => {
+      // Get the trigger element
+      const trigger = dropdown.querySelector(".custom-mobile-dropdown");
+
+      if (trigger) {
+        // Add click event handler
+        trigger.addEventListener("click", function (e) {
+          // Prevent the default link behavior
+          e.preventDefault();
+          e.stopPropagation();
+
+          console.log("Mobile dropdown clicked"); // Debugging
+
+          // Toggle the active class on the dropdown
+          dropdown.classList.toggle("active");
+        });
+      }
+
+      // Handle clicks on dropdown items
+      const dropdownItems = dropdown.querySelectorAll(
+        ".mobile-dropdown-menu .nav-link"
+      );
+      dropdownItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          // Close the dropdown
+          dropdown.classList.remove("active");
+
+          // Close mobile sidebar if it exists
+          const mobileSidebar = document.getElementById("mobileSidebar");
+          if (mobileSidebar && typeof bootstrap !== "undefined") {
+            const sidebar = bootstrap.Offcanvas.getInstance(mobileSidebar);
+            if (sidebar) {
+              sidebar.hide();
+            }
+          }
+        });
+      });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".mobile-dropdown")) {
+        mobileDropdowns.forEach((dropdown) => {
+          dropdown.classList.remove("active");
+        });
+      }
+    });
+  });
+
+  // =====================================================
+  // CLOSE DROPDOWNS WHEN CLICKING OUTSIDE
+  // =====================================================
+  document.addEventListener("click", function (e) {
+    // For desktop dropdowns
+    if (!e.target.closest(".dropdown")) {
+      const openDropdowns = document.querySelectorAll(".dropdown.show");
+      openDropdowns.forEach((openDropdown) => {
+        // Close using both native DOM and Bootstrap (if available)
+        openDropdown.classList.remove("show");
+        const menu = openDropdown.querySelector(".dropdown-menu");
+        if (menu) menu.classList.remove("show");
+
+        if (typeof bootstrap !== "undefined") {
+          const dropdownToggle = openDropdown.querySelector(
+            ".dropdown-toggle, .custom-dropdown-toggle"
+          );
+          if (dropdownToggle) {
+            const bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
+            if (bsDropdown) {
+              bsDropdown.hide();
+            }
+          }
+        }
+      });
+    }
+
+    // For mobile dropdowns
+    if (!e.target.closest(".mobile-dropdown")) {
+      const openMobileDropdowns = document.querySelectorAll(
+        ".mobile-dropdown.active"
+      );
+      openMobileDropdowns.forEach((dropdown) => {
+        dropdown.classList.remove("active");
+        const dropdownLink = dropdown.querySelector(".nav-link");
+        if (dropdownLink) {
+          dropdownLink.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  });
+
+  // =====================================================
+  // HANDLE ACTIVE STATE ON PAGE LOAD AND SCROLL
+  // =====================================================
+  // Check for active section/page on page load
+  function setActiveNavItem() {
+    const activePage = sessionStorage.getItem("activePage");
+    const activeSection = sessionStorage.getItem("activeNavSection");
+
+    // First clear all active states
+    clearActiveStates();
+
+    if (activeSection) {
+      // Find the dropdown menu item with this href
+      const activeLink = document.querySelector(
+        `.dropdown-menu .dropdown-item[href="${activeSection}"]`
+      );
+      if (activeLink) {
+        // Set the parent dropdown as active
+        const parentDropdown = activeLink.closest(".dropdown");
+        if (parentDropdown) {
+          const dropdownToggle = parentDropdown.querySelector(
+            ".dropdown-toggle, .custom-dropdown-toggle"
+          );
+          if (dropdownToggle) {
+            dropdownToggle.classList.add("active");
+          }
+        }
+      }
+    } else if (activePage) {
+      // Find and activate regular nav link
+      const activeNavLink = document.querySelector(
+        `.navbar-nav .nav-link[href="${activePage}"]`
+      );
+      if (activeNavLink) {
+        activeNavLink.classList.add("active");
+      }
+    } else {
+      // Default behavior - check if we're on a specific page/section
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+
+      // Find link that matches current path
+      navLinks.forEach((link) => {
+        const href = link.getAttribute("href");
+        // Skip anchors and javascript links
+        if (href && !href.startsWith("#") && !href.startsWith("javascript")) {
+          if (
+            href === currentPath ||
+            href === currentPath + "/" ||
+            currentPath.endsWith(href)
+          ) {
+            link.classList.add("active");
+          }
+        }
+      });
+
+      // If hash exists, check for matching section
+      if (window.location.hash) {
+        const hash = window.location.hash;
+        const sectionLink = document.querySelector(
+          `.dropdown-menu .dropdown-item[href="${hash}"]`
+        );
+        if (sectionLink) {
+          const parentDropdown = sectionLink.closest(".dropdown");
+          if (parentDropdown) {
+            const dropdownToggle = parentDropdown.querySelector(
+              ".dropdown-toggle, .custom-dropdown-toggle"
+            );
+            if (dropdownToggle) {
+              clearActiveStates();
+              dropdownToggle.classList.add("active");
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Set active state on page load
+  setActiveNavItem();
+
+  // Update active state on scroll but only for section links
+  // This prevents the product link from staying active when scrolling past sections
+  window.addEventListener("scroll", function () {
+    // Only update based on scroll if we have an active section
+    if (sessionStorage.getItem("activeNavSection")) {
+      // Get all sections that are targets of dropdown items
+      const sections = document.querySelectorAll("section[id], div[id]");
+      let currentSection = "";
+
+      sections.forEach((section) => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+
+        // If we've scrolled to this section
+        if (window.scrollY >= sectionTop - 200) {
+          currentSection = "#" + section.getAttribute("id");
+        }
+      });
+
+      if (currentSection !== "") {
+        // Find the dropdown item that links to this section
+        const activeLink = document.querySelector(
+          `.dropdown-menu .dropdown-item[href="${currentSection}"]`
+        );
+        if (activeLink) {
+          // Store the current section
+          sessionStorage.setItem("activeNavSection", currentSection);
+
+          // Set parent dropdown as active
+          const parentDropdown = activeLink.closest(".dropdown");
+          if (parentDropdown) {
+            const dropdownToggle = parentDropdown.querySelector(
+              ".dropdown-toggle, .custom-dropdown-toggle"
+            );
+            if (dropdownToggle) {
+              clearActiveStates();
+              dropdownToggle.classList.add("active");
+            }
+          }
+        }
+      }
+    }
+  });
+});

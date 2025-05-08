@@ -139,6 +139,154 @@ body {
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%239c5bf2' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
+/* Desktop Dropdown Styles */
+.navbar-nav .dropdown-menu {
+    background-color: var(--dark-bg);
+    border: 1px solid var(--accent-color);
+    border-radius: 0.25rem;
+    margin-top: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding-top: 8px;
+}
+
+/* Create a small transparent area above dropdown to prevent hover gaps */
+.navbar-nav .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: transparent;
+}
+
+.navbar-nav .dropdown-item {
+    color: var(--light-color);
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.navbar-nav .dropdown-item:hover,
+.navbar-nav .dropdown-item:focus {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Custom dropdown toggle styling */
+.custom-dropdown-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.custom-dropdown-toggle .fa-caret-down {
+    font-size: 0.85em;
+    position: relative;
+    z-index: 2;
+}
+
+/* Overrides Bootstrap's default arrow for our custom toggle */
+.custom-dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Style the active indicator separately */
+.custom-dropdown-toggle.active::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(156, 91, 242, 0.3);
+    transition: width 0.3s ease;
+    z-index: 1;
+}
+
+/* Enable hover dropdown on desktop with improved behavior */
+@media (min-width: 992px) {
+
+    /* Create hover area that includes both nav-item and its dropdown */
+    .navbar-nav .dropdown {
+        position: relative;
+    }
+
+    /* Show dropdown on hover of the parent nav-item */
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Add a small delay to prevent accidental closing */
+    .navbar-nav .dropdown .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        margin-top: 0;
+        transition: opacity 0.2s, visibility 0.2s;
+        pointer-events: none;
+    }
+
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        pointer-events: auto;
+    }
+
+    /* Add extra hover area to prevent gaps */
+    .navbar-nav .dropdown::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 10px;
+    }
+}
+
+/* Mobile Dropdown Styles */
+.mobile-dropdown {
+    position: relative;
+}
+
+.mobile-dropdown-toggle {
+    transition: transform 0.3s ease;
+}
+
+.mobile-dropdown.active .mobile-dropdown-toggle {
+    transform: rotate(180deg);
+}
+
+.mobile-dropdown-menu {
+    display: none;
+    list-style: none;
+    padding-left: 1rem;
+    margin: 0;
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease;
+}
+
+.mobile-dropdown.active .mobile-dropdown-menu {
+    display: block;
+    max-height: 200px;
+    /* Adjust as needed */
+    margin-top: 0.5rem;
+}
+
+.mobile-dropdown-menu .nav-link {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    color: var(--light-color);
+    opacity: 0.9;
+}
+
+.mobile-dropdown-menu .nav-link:hover {
+    color: var(--accent-hover);
+}
+
 .search-box {
     position: relative;
     height: 40px;
@@ -1929,8 +2077,8 @@ form button[type="submit"]:hover {
     }
 }
 
- /* Products Section */
- .section-title {
+/* Products Section */
+.section-title {
     text-align: center;
     margin-bottom: 40px;
     font-weight: 700;
