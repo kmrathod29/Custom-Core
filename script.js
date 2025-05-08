@@ -451,23 +451,122 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Toggle between seller login and signup forms
-document
-  .getElementById("sellerLoginBtn")
-  .addEventListener("click", function () {
-    document.getElementById("sellerLoginForm").classList.remove("d-none");
-    document.getElementById("sellerSignupForm").classList.add("d-none");
-    document.getElementById("sellerLoginBtn").classList.add("active");
-    document.getElementById("sellerSignupBtn").classList.remove("active");
+  const sellerAuthToggle = document.getElementById("sellerAuthToggle");
+  const sellerLoginForm = document.getElementById("sellerLoginForm");
+  const sellerSignupForm = document.getElementById("sellerSignupForm");
+  const sellerLoginSpan = document.getElementById("sellerLoginSpan");
+  const sellerSignupSpan = document.getElementById("sellerSignupSpan");
+
+  sellerAuthToggle.addEventListener("change", function () {
+    if (this.checked) {
+      sellerLoginForm.classList.add("d-none");
+      sellerSignupForm.classList.remove("d-none");
+      sellerLoginSpan.classList.remove("active");
+      sellerSignupSpan.classList.add("active");
+    } else {
+      sellerLoginForm.classList.remove("d-none");
+      sellerSignupForm.classList.add("d-none");
+      sellerLoginSpan.classList.add("active");
+      sellerSignupSpan.classList.remove("active");
+    }
   });
 
-document
-  .getElementById("sellerSignupBtn")
-  .addEventListener("click", function () {
-    document.getElementById("sellerLoginForm").classList.add("d-none");
-    document.getElementById("sellerSignupForm").classList.remove("d-none");
-    document.getElementById("sellerLoginBtn").classList.remove("active");
-    document.getElementById("sellerSignupBtn").classList.add("active");
+// Navigation between auth and seller modals
+function setupCustomerNavigation() {
+
+  // From customer Login/Signup to seller signup
+
+  document.querySelectorAll(".goToSellerSignup").forEach(function (element) {
+    element.addEventListener("click", function () {
+      $("#authModal").modal("hide");
+  
+      setTimeout(() => {
+        $("#sellerModal").modal("show");
+  
+        // 🔁 Now default to: hide login, show signup
+        document.getElementById("sellerLoginForm").classList.add("d-none");
+        document.getElementById("sellerSignupForm").classList.remove("d-none");
+  
+        // ✅ Toggle active states
+        document.getElementById("sellerLoginSpan").classList.remove("active");
+        document.getElementById("sellerSignupSpan").classList.add("active");
+  
+        // Optional: flip toggle checkbox if used
+        document.getElementById("sellerAuthToggle").checked = true;
+      }, 500);
+    });
   });
+  
+  
+
+  // From seller login to customer login
+  document
+    .getElementById("goToCustomerLogin")
+    .addEventListener("click", function () {
+      $("#sellerModal").modal("hide");
+      document.getElementById("authToggle").checked = false;
+      const loginForm = document.querySelector(".login-form");
+      const signupForm = document.querySelector(".signup-form");
+      loginForm.style.display = "block";
+      signupForm.style.display = "none";
+      document.getElementById("modalTitleText").textContent =
+        "Login to Your Account";
+      setTimeout(() => $("#authModal").modal("show"), 500);
+    });
+
+  // From seller login to customer signup
+  document
+    .getElementById("goToCustomerSignup")
+    .addEventListener("click", function () {
+      $("#sellerModal").modal("hide");
+      document.getElementById("authToggle").checked = true;
+      const loginForm = document.querySelector(".login-form");
+      const signupForm = document.querySelector(".signup-form");
+      loginForm.style.display = "none";
+      signupForm.style.display = "block";
+      document.getElementById("modalTitleText").textContent =
+        "Create An Account";
+      setTimeout(() => $("#authModal").modal("show"), 500);
+    });
+
+  // From seller signup to customer login
+  document
+    .getElementById("goToCustomerLogin2")
+    .addEventListener("click", function () {
+      $("#sellerModal").modal("hide");
+      document.getElementById("authToggle").checked = false;
+      const loginForm = document.querySelector(".login-form");
+      const signupForm = document.querySelector(".signup-form");
+      loginForm.style.display = "block";
+      signupForm.style.display = "none";
+      document.getElementById("modalTitleText").textContent =
+        "Login to Your Account";
+      setTimeout(() => $("#authModal").modal("show"), 500);
+    });
+
+  // From seller signup to customer signup
+  document
+    .getElementById("goToCustomerSignup2")
+    .addEventListener("click", function () {
+      $("#sellerModal").modal("hide");
+      document.getElementById("authToggle").checked = true;
+      const loginForm = document.querySelector(".login-form");
+      const signupForm = document.querySelector(".signup-form");
+      loginForm.style.display = "none";
+      signupForm.style.display = "block";
+      document.getElementById("modalTitleText").textContent =
+        "Create An Account";
+      setTimeout(() => $("#authModal").modal("show"), 500);
+    });
+}
+
+// Call this function after the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", setupCustomerNavigation);
+
+// For dynamically added elements or if the above doesn't work
+$(document).ready(function () {
+  setupCustomerNavigation();
+});
 
 // Updated User authentication logic
 document.addEventListener("DOMContentLoaded", function () {

@@ -983,16 +983,30 @@ form button[type="submit"]:hover {
     text-decoration: none;
 }
 
+.seller-form .btn-link {
+    color: var(--primary-color) !important;
+    font-weight: 500;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.seller-form .btn-link:hover {
+    color: var(--accent-color) !important;
+    text-decoration: underline;
+}
+
+
+
 /* Toggle buttons in Seller Modal */
 .seller-toggle {
     display: flex;
-    background-color: #e9ecef;
+    /* background-color: #e9ecef; */
     border-radius: 12px;
     padding: 4px;
     margin-bottom: 1rem;
 }
 
-.seller-toggle button {
+/* .seller-toggle button {
     flex: 1;
     border: none;
     border-radius: 8px;
@@ -1007,7 +1021,7 @@ form button[type="submit"]:hover {
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
     box-shadow: 0 4px 15px rgba(78, 84, 200, 0.3);
-}
+} */
 
 /* User dropdown menu */
 #usernameDisplay {

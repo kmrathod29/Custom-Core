@@ -51,7 +51,9 @@
                             <label for="password" class="form-label"><i class="fas fa-lock me-2"></i>Password</label>
                             <input type="password" class="form-control" id="password" placeholder="Enter your password"
                                 required>
-                            <div class="form-text text-end"><a href="#">Forgot password?</a></div>
+                            <div class="form-text text-end"><a href="#"
+                                    onclick="alert('This feature is not available right now. We are working on it!'); return false;">Forgot
+                                    password?</a></div>
                         </div>
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="rememberMe">
@@ -65,17 +67,24 @@
                         <div class="text-center my-3">
                             <p class="text-muted small mb-2">or login with</p>
                             <div class="d-flex justify-content-center">
-                                <a href="#" class="btn btn-sm btn-outline-primary mx-2"><i
+
+                                <a href="#" class="btn btn-sm btn-outline-primary mx-2"
+                                    onclick="alert('This feature is not available right now. We are working on it!'); return false;"><i
                                         class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-danger mx-2"><i class="fab fa-google"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-dark mx-2"><i class="fab fa-apple"></i></a>
+
+                                <a href="#" class="btn btn-sm btn-outline-danger mx-2"><i class="fab fa-google"
+                                        onclick="alert('This feature is not available right now. We are working on it!'); return false;"></i></a>
+
+                                <a href="#" class="btn btn-sm btn-outline-dark mx-2"
+                                    onclick="alert('This feature is not available right now. We are working on it!'); return false;"><i
+                                        class="fab fa-apple"></i></a>
                             </div>
                         </div>
 
                         <!-- Seller Option -->
                         <div class="text-center mt-4">
-                            <small class="mt-2 d-block">Want to sell products? <a href="#" data-bs-toggle="modal"
-                                    data-bs-target="#sellerModal" data-bs-dismiss="modal">Become a Seller</a></small>
+                            <small class="mt-2 d-block">Want to sell products? <a href="#" class="goToSellerSignup">Become
+                                    a Seller</a></small>
                         </div>
                     </form>
 
@@ -102,7 +111,11 @@
                         <div class="mb-3 form-check">
                             <input type="checkbox" class="form-check-input" id="termsCheck" required>
                             <label class="form-check-label small" for="termsCheck">
-                                I agree to the <a href="#">Terms</a> and <a href="#">Privacy Policy</a>
+                                I agree to the <a href="#"
+                                    onclick="alert('This feature is not available right now. We are working on it!'); return false;">Terms</a>
+                                and <a href="#"
+                                    onclick="alert('This feature is not available right now. We are working on it!'); return false;">Privacy
+                                    Policy</a>
                             </label>
                         </div>
                         <button type="submit" class="btn btn-primary w-100">
@@ -113,17 +126,22 @@
                         <div class="text-center my-3">
                             <p class="text-muted small mb-2">or sign up with</p>
                             <div class="d-flex justify-content-center">
-                                <a href="#" class="btn btn-sm btn-outline-primary mx-2"><i
-                                        class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-danger mx-2"><i class="fab fa-google"></i></a>
-                                <a href="#" class="btn btn-sm btn-outline-dark mx-2"><i class="fab fa-apple"></i></a>
+
+                                <a href="#" class="btn btn-sm btn-outline-primary mx-2"><i class="fab fa-facebook-f"
+                                        onclick="alert('This feature is not available right now. We are working on it!'); return false;"></i></a>
+
+                                <a href="#" class="btn btn-sm btn-outline-danger mx-2"><i class="fab fa-google"
+                                        onclick="alert('This feature is not available right now. We are working on it!'); return false;"></i></a>
+
+                                <a href="#" class="btn btn-sm btn-outline-dark mx-2"><i class="fab fa-apple"
+                                        onclick="alert('This feature is not available right now. We are working on it!'); return false;"></i></a>
                             </div>
                         </div>
 
                         <!-- Seller Option -->
                         <div class="text-center mt-4">
-                            <small class="mt-2 d-block">Want to sell products? <a href="#" data-bs-toggle="modal"
-                                    data-bs-target="#sellerModal" data-bs-dismiss="modal">Become a Seller</a></small>
+                            <small class="mt-2 d-block">Want to sell products? <a href="#" class="goToSellerSignup">Become
+                                    a Seller</a></small>
                         </div>
                     </form>
                 </div>
@@ -142,10 +160,19 @@
                 <div class="modal-body">
 
                     <!-- Toggle buttons -->
-                    <div class="seller-toggle">
-                        <button class="active" id="sellerLoginBtn">Login</button>
-                        <button id="sellerSignupBtn">Create Account</button>
+                    <div class="seller-toggle form-toggle text-center mb-3">
+                        <div class="toggle-switch d-inline-block">
+                            <input type="checkbox" id="sellerAuthToggle" class="toggle-checkbox">
+                            <label for="sellerAuthToggle" class="toggle-label">
+                                <span class="login-text active" id="sellerLoginSpan">Login</span>
+                                <span class="signup-text" id="sellerSignupSpan">Sign Up</span>
+                            </label>
+                        </div>
                     </div>
+                    
+                    <!-- <button class="active" id="sellerLoginBtn">Login</button>
+                        <button id="sellerSignupBtn">Create Account</button> -->
+
 
                     <!-- Seller Login Form -->
                     <form id="sellerLoginForm" class="seller-form">
@@ -169,6 +196,15 @@
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="fas fa-sign-in-alt me-2"></i>Login to Seller Portal
                         </button>
+
+                        <div class="text-center mt-4">
+                            <small class="mt-2 d-block">
+                                New here? <button type="button" class="btn btn-link p-0 m-0"
+                                    id="goToCustomerSignup2">Sign up</button> or
+                                <button type="button" class="btn btn-link p-0 m-0"
+                                    id="goToCustomerLogin2">Login</button> as Customer.
+                            </small>
+                        </div>
                     </form>
 
                     <!-- Seller Sign Up Form -->
@@ -212,8 +248,16 @@
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="fas fa-store me-2"></i>Create Seller Account
                         </button>
-                    </form>
 
+                        <div class="text-center mt-4">
+                            <small class="mt-2 d-block">
+                                New here? <button type="button" class="btn btn-link p-0 m-0"
+                                    id="goToCustomerSignup">Sign up</button> or
+                                <button type="button" class="btn btn-link p-0 m-0" id="goToCustomerLogin">Login</button>
+                                as Customer.
+                            </small>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -510,7 +554,7 @@
                         <li><a class="nav-link" href="#parts">PC Parts & Peripherals</a></li>
                     </ul>
                 </li>
-                
+
                 <li class="nav-item"><a class="nav-link" href="#build">Build PC</a></li>
                 <li class="nav-item"><a class="nav-link" href="#contact">Contact Us</a></li>
             </ul>
