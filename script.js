@@ -451,53 +451,50 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Toggle between seller login and signup forms
-  const sellerAuthToggle = document.getElementById("sellerAuthToggle");
-  const sellerLoginForm = document.getElementById("sellerLoginForm");
-  const sellerSignupForm = document.getElementById("sellerSignupForm");
-  const sellerLoginSpan = document.getElementById("sellerLoginSpan");
-  const sellerSignupSpan = document.getElementById("sellerSignupSpan");
+const sellerAuthToggle = document.getElementById("sellerAuthToggle");
+const sellerLoginForm = document.getElementById("sellerLoginForm");
+const sellerSignupForm = document.getElementById("sellerSignupForm");
+const sellerLoginSpan = document.getElementById("sellerLoginSpan");
+const sellerSignupSpan = document.getElementById("sellerSignupSpan");
 
-  sellerAuthToggle.addEventListener("change", function () {
-    if (this.checked) {
-      sellerLoginForm.classList.add("d-none");
-      sellerSignupForm.classList.remove("d-none");
-      sellerLoginSpan.classList.remove("active");
-      sellerSignupSpan.classList.add("active");
-    } else {
-      sellerLoginForm.classList.remove("d-none");
-      sellerSignupForm.classList.add("d-none");
-      sellerLoginSpan.classList.add("active");
-      sellerSignupSpan.classList.remove("active");
-    }
-  });
+sellerAuthToggle.addEventListener("change", function () {
+  if (this.checked) {
+    sellerLoginForm.classList.add("d-none");
+    sellerSignupForm.classList.remove("d-none");
+    sellerLoginSpan.classList.remove("active");
+    sellerSignupSpan.classList.add("active");
+  } else {
+    sellerLoginForm.classList.remove("d-none");
+    sellerSignupForm.classList.add("d-none");
+    sellerLoginSpan.classList.add("active");
+    sellerSignupSpan.classList.remove("active");
+  }
+});
 
 // Navigation between auth and seller modals
 function setupCustomerNavigation() {
-
   // From customer Login/Signup to seller signup
 
   document.querySelectorAll(".goToSellerSignup").forEach(function (element) {
     element.addEventListener("click", function () {
       $("#authModal").modal("hide");
-  
+
       setTimeout(() => {
         $("#sellerModal").modal("show");
-  
+
         // 🔁 Now default to: hide login, show signup
         document.getElementById("sellerLoginForm").classList.add("d-none");
         document.getElementById("sellerSignupForm").classList.remove("d-none");
-  
+
         // ✅ Toggle active states
         document.getElementById("sellerLoginSpan").classList.remove("active");
         document.getElementById("sellerSignupSpan").classList.add("active");
-  
+
         // Optional: flip toggle checkbox if used
         document.getElementById("sellerAuthToggle").checked = true;
       }, 500);
     });
   });
-  
-  
 
   // From seller login to customer login
   document
@@ -2258,203 +2255,196 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // =====================================================
-  // DESKTOP DROPDOWN FUNCTIONALITY
+  // DROPDOWN FUNCTIONALITY WITH ALWAYS-VISIBLE MOBILE DROPDOWNS
   // =====================================================
-  const dropdowns = document.querySelectorAll(".navbar-nav .dropdown");
+  document.addEventListener("DOMContentLoaded", function () {
+    // =====================================================
+    // DESKTOP DROPDOWN FUNCTIONALITY
+    // =====================================================
+    const desktopDropdowns = document.querySelectorAll(".navbar-nav .dropdown");
 
-  dropdowns.forEach((dropdown) => {
-    const dropdownMenu = dropdown.querySelector(".dropdown-menu");
-    const dropdownToggle = dropdown.querySelector(
-      ".dropdown-toggle, .custom-dropdown-toggle"
-    );
-    let timeout;
+    desktopDropdowns.forEach((dropdown) => {
+      const dropdownMenu = dropdown.querySelector(".dropdown-menu");
+      const dropdownToggle = dropdown.querySelector(
+        ".dropdown-toggle, .custom-dropdown-toggle"
+      );
+      let timeout;
 
-    // Add hover persistence for desktop
-    dropdown.addEventListener("mouseenter", function () {
-      if (window.innerWidth >= 992) {
-        clearTimeout(timeout);
-        dropdown.classList.add("show");
-        dropdownMenu.classList.add("show");
-      }
-    });
+      // Add hover persistence for desktop
+      dropdown.addEventListener("mouseenter", function () {
+        if (window.innerWidth >= 992) {
+          clearTimeout(timeout);
+          dropdown.classList.add("show");
+          dropdownMenu.classList.add("show");
+        }
+      });
 
-    // Add slight delay before closing on mouseleave
-    dropdown.addEventListener("mouseleave", function () {
-      if (window.innerWidth >= 992) {
-        timeout = setTimeout(function () {
+      // Add slight delay before closing on mouseleave
+      dropdown.addEventListener("mouseleave", function () {
+        if (window.innerWidth >= 992) {
+          timeout = setTimeout(function () {
+            dropdown.classList.remove("show");
+            dropdownMenu.classList.remove("show");
+          }, 200); // 200ms delay before closing
+        }
+      });
+
+      // Add click handler for dropdown links
+      const dropdownLinks = dropdown.querySelectorAll(
+        ".dropdown-menu .nav-link, .dropdown-menu .dropdown-item"
+      );
+      dropdownLinks.forEach((link) => {
+        link.addEventListener("click", function () {
+          // Close dropdown when clicking a link
           dropdown.classList.remove("show");
           dropdownMenu.classList.remove("show");
-        }, 200); // 200ms delay before closing
-      }
-    });
 
-    // Add click handler for dropdown links
-    const dropdownLinks = dropdown.querySelectorAll(
-      ".dropdown-menu .nav-link, .dropdown-menu .dropdown-item"
-    );
-    dropdownLinks.forEach((link) => {
-      link.addEventListener("click", function (e) {
-        // Don't prevent default to allow navigation to anchor
-
-        // Close dropdown when clicking a link
-        dropdown.classList.remove("show");
-        dropdownMenu.classList.remove("show");
-
-        // If using Bootstrap's API
-        if (typeof bootstrap !== "undefined") {
-          const bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
-          if (bsDropdown) {
-            bsDropdown.hide();
-          }
-        }
-
-        // Clear active states and set current dropdown toggle as active
-        clearActiveStates();
-        dropdownToggle.classList.add("active");
-
-        // Store the active section in sessionStorage
-        sessionStorage.setItem("activeNavSection", link.getAttribute("href"));
-        sessionStorage.removeItem("activePage");
-
-        // If there's a mobile sidebar, close it as well
-        if (window.innerWidth < 992 && typeof bootstrap !== "undefined") {
-          const mobileSidebar = document.getElementById("mobileSidebar");
-          if (mobileSidebar) {
-            const bsOffcanvas = bootstrap.Offcanvas.getInstance(mobileSidebar);
-            if (bsOffcanvas) {
-              bsOffcanvas.hide();
-            }
-          }
-        }
-      });
-    });
-  });
-
-  // =====================================================
-  // MOBILE DROPDOWN FUNCTIONALITY
-  // =====================================================
-  // Wait for the DOM to be fully loaded
-  document.addEventListener("DOMContentLoaded", function () {
-    // Simple focused script to fix mobile dropdown functionality
-    const mobileDropdowns = document.querySelectorAll(".mobile-dropdown");
-
-    // First, add CSS for mobile dropdown styling
-    const mobileStyle = document.createElement("style");
-    mobileStyle.textContent = `
-    /* Default state - dropdown menu is hidden */
-    .mobile-dropdown .mobile-dropdown-menu {
-      display: none;
-      padding-left: 15px;
-      margin-top: 5px;
-    }
-    
-    /* Active state - dropdown menu is visible */
-    .mobile-dropdown.active .mobile-dropdown-menu {
-      display: block;
-    }
-    
-    /* Rotate the dropdown icon when active */
-    .mobile-dropdown.active .mobile-dropdown-toggle {
-      transform: rotate(180deg);
-    }
-    
-    /* Smooth transition for the icon */
-    .mobile-dropdown-toggle {
-      transition: transform 0.3s ease;
-    }
-  `;
-    document.head.appendChild(mobileStyle);
-
-    // Add click handler for each mobile dropdown
-    mobileDropdowns.forEach((dropdown) => {
-      // Get the trigger element
-      const trigger = dropdown.querySelector(".custom-mobile-dropdown");
-
-      if (trigger) {
-        // Add click event handler
-        trigger.addEventListener("click", function (e) {
-          // Prevent the default link behavior
-          e.preventDefault();
-          e.stopPropagation();
-
-          console.log("Mobile dropdown clicked"); // Debugging
-
-          // Toggle the active class on the dropdown
-          dropdown.classList.toggle("active");
-        });
-      }
-
-      // Handle clicks on dropdown items
-      const dropdownItems = dropdown.querySelectorAll(
-        ".mobile-dropdown-menu .nav-link"
-      );
-      dropdownItems.forEach((item) => {
-        item.addEventListener("click", function () {
-          // Close the dropdown
-          dropdown.classList.remove("active");
-
-          // Close mobile sidebar if it exists
-          const mobileSidebar = document.getElementById("mobileSidebar");
-          if (mobileSidebar && typeof bootstrap !== "undefined") {
-            const sidebar = bootstrap.Offcanvas.getInstance(mobileSidebar);
-            if (sidebar) {
-              sidebar.hide();
-            }
-          }
-        });
-      });
-    });
-
-    // Close dropdowns when clicking outside
-    document.addEventListener("click", function (e) {
-      if (!e.target.closest(".mobile-dropdown")) {
-        mobileDropdowns.forEach((dropdown) => {
-          dropdown.classList.remove("active");
-        });
-      }
-    });
-  });
-
-  // =====================================================
-  // CLOSE DROPDOWNS WHEN CLICKING OUTSIDE
-  // =====================================================
-  document.addEventListener("click", function (e) {
-    // For desktop dropdowns
-    if (!e.target.closest(".dropdown")) {
-      const openDropdowns = document.querySelectorAll(".dropdown.show");
-      openDropdowns.forEach((openDropdown) => {
-        // Close using both native DOM and Bootstrap (if available)
-        openDropdown.classList.remove("show");
-        const menu = openDropdown.querySelector(".dropdown-menu");
-        if (menu) menu.classList.remove("show");
-
-        if (typeof bootstrap !== "undefined") {
-          const dropdownToggle = openDropdown.querySelector(
-            ".dropdown-toggle, .custom-dropdown-toggle"
-          );
-          if (dropdownToggle) {
+          // If using Bootstrap's API
+          if (typeof bootstrap !== "undefined") {
             const bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
             if (bsDropdown) {
               bsDropdown.hide();
             }
           }
-        }
-      });
-    }
 
-    // For mobile dropdowns
-    if (!e.target.closest(".mobile-dropdown")) {
-      const openMobileDropdowns = document.querySelectorAll(
-        ".mobile-dropdown.active"
-      );
-      openMobileDropdowns.forEach((dropdown) => {
-        dropdown.classList.remove("active");
-        const dropdownLink = dropdown.querySelector(".nav-link");
-        if (dropdownLink) {
-          dropdownLink.setAttribute("aria-expanded", "false");
-        }
+          // Handle additional functionality like active states if needed
+          if (typeof clearActiveStates === "function") {
+            clearActiveStates();
+            dropdownToggle.classList.add("active");
+          }
+
+          // Store the active section in sessionStorage
+          sessionStorage.setItem("activeNavSection", link.getAttribute("href"));
+          sessionStorage.removeItem("activePage");
+
+          // Close mobile sidebar if needed
+          if (window.innerWidth < 992 && typeof bootstrap !== "undefined") {
+            const mobileSidebar = document.getElementById("mobileSidebar");
+            if (mobileSidebar) {
+              const bsOffcanvas =
+                bootstrap.Offcanvas.getInstance(mobileSidebar);
+              if (bsOffcanvas) {
+                bsOffcanvas.hide();
+              }
+            }
+          }
+        });
       });
+    });
+
+    // =====================================================
+    // ALWAYS-VISIBLE MOBILE DROPDOWN FUNCTIONALITY
+    // =====================================================
+    // Add mobile-specific CSS to make dropdown always visible on mobile
+    const mobileStyle = document.createElement("style");
+    mobileStyle.textContent = `
+    /* Mobile dropdown styles */
+    @media (max-width: 991px) {
+      /* Always show mobile dropdown menu */
+      .mobile-dropdown .mobile-dropdown-menu {
+        display: block !important;
+        padding-left: 15px;
+        margin-top: 5px;
+        list-style: none;
+      }
+      
+      /* Remove dropdown icon or make it always point to open state */
+      .mobile-dropdown .mobile-dropdown-toggle {
+        transform: rotate(180deg);
+      }
+      
+      /* Optional: Hide the dropdown toggle on mobile */
+      .mobile-dropdown .custom-mobile-dropdown .fa-caret-down {
+        display: none;
+      }
+      
+      /* Optional: Style the dropdown header like a category */
+      .mobile-dropdown .custom-mobile-dropdown {
+        font-weight: bold;
+        color: #333; /* Adjust to match your design */
+        pointer-events: none; /* Remove clickability */
+      }
+      
+      /* Indent menu items for visual hierarchy */
+      .mobile-dropdown-menu .nav-link {
+        padding-left: 15px;
+        font-size: 0.95em; /* Slightly smaller than parent */
+      }
     }
+    
+    /* Desktop dropdown styles - hide for larger screens */
+    @media (min-width: 992px) {
+      .mobile-dropdown {
+        display: none;
+      }
+    }
+  `;
+    document.head.appendChild(mobileStyle);
+
+    // Get all mobile dropdown items
+    const mobileDropdownItems = document.querySelectorAll(
+      ".mobile-dropdown-menu .nav-link"
+    );
+
+    // Add click handlers for mobile dropdown items
+    mobileDropdownItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        // Close mobile sidebar if it exists
+        const mobileSidebar = document.getElementById("mobileSidebar");
+        if (mobileSidebar && typeof bootstrap !== "undefined") {
+          const sidebar = bootstrap.Offcanvas.getInstance(mobileSidebar);
+          if (sidebar) {
+            sidebar.hide();
+          }
+        }
+
+        // Store the active section in sessionStorage
+        sessionStorage.setItem("activeNavSection", this.getAttribute("href"));
+        sessionStorage.removeItem("activePage");
+      });
+    });
+
+    // =====================================================
+    // CLOSE DESKTOP DROPDOWNS WHEN CLICKING OUTSIDE
+    // =====================================================
+    document.addEventListener("click", function (e) {
+      // For desktop dropdowns
+      if (!e.target.closest(".dropdown")) {
+        const openDropdowns = document.querySelectorAll(".dropdown.show");
+        openDropdowns.forEach((openDropdown) => {
+          openDropdown.classList.remove("show");
+          const menu = openDropdown.querySelector(".dropdown-menu");
+          if (menu) menu.classList.remove("show");
+
+          if (typeof bootstrap !== "undefined") {
+            const dropdownToggle = openDropdown.querySelector(
+              ".dropdown-toggle, .custom-dropdown-toggle"
+            );
+            if (dropdownToggle) {
+              const bsDropdown = bootstrap.Dropdown.getInstance(dropdownToggle);
+              if (bsDropdown) {
+                bsDropdown.hide();
+              }
+            }
+          }
+        });
+      }
+    });
+
+    // Function to handle active states if needed
+    window.clearActiveStates =
+      window.clearActiveStates ||
+      function () {
+        const navLinks = document.querySelectorAll(".navbar-nav .nav-link");
+        navLinks.forEach((link) => {
+          link.classList.remove("active");
+        });
+      };
+
+    // Handle responsive behavior on window resize
+    window.addEventListener("resize", function () {
+      // No additional behavior needed as CSS media queries handle the display
+    });
   });
 
   // =====================================================

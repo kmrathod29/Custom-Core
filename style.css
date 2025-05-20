@@ -246,45 +246,63 @@ body {
     }
 }
 
-/* Mobile Dropdown Styles */
+/* Mobile dropdown container */
 .mobile-dropdown {
     position: relative;
+    margin-bottom: 0.5rem;
 }
 
-.mobile-dropdown-toggle {
-    transition: transform 0.3s ease;
-}
-
-.mobile-dropdown.active .mobile-dropdown-toggle {
-    transform: rotate(180deg);
-}
-
-.mobile-dropdown-menu {
-    display: none;
+/* Mobile dropdown menu - always visible */
+.mobile-dropdown .mobile-dropdown-menu {
+    display: block !important;
+    /* Force display */
     list-style: none;
-    padding-left: 1rem;
-    margin: 0;
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s ease;
+    padding-left: 1.5rem;
+    margin: 0.25rem 0 0.5rem 0;
+    overflow: visible;
 }
 
-.mobile-dropdown.active .mobile-dropdown-menu {
+/* Mobile dropdown link styling */
+.mobile-dropdown>.nav-link {
+    font-weight: 600;
+    /* Bold the parent item */
+    color: var(--light-color, #f8f9fa);
     display: block;
-    max-height: 200px;
-    /* Adjust as needed */
-    margin-top: 0.5rem;
+    padding: 0.5rem 0;
 }
 
+/* Hide the dropdown caret */
+/* .mobile-dropdown .fa-caret-down,
+.mobile-dropdown .mobile-dropdown-toggle {
+    display: none;
+} */
+
+/* Style the dropdown menu items */
 .mobile-dropdown-menu .nav-link {
-    padding: 0.5rem 1rem;
+    padding: 0.4rem 0;
     font-size: 0.9rem;
-    color: var(--light-color);
-    opacity: 0.9;
+    color: var(--light-color, #f8f9fa);
+    opacity: 0.85;
+    transition: color 0.2s ease, opacity 0.2s ease;
 }
 
+/* Hover effect for dropdown items */
 .mobile-dropdown-menu .nav-link:hover {
-    color: var(--accent-hover);
+    color: var(--accent-hover, #007bff);
+    opacity: 1;
+}
+
+/* Active state for dropdown items */
+.mobile-dropdown-menu .nav-link.active {
+    color: var(--accent-color, #0056b3);
+    opacity: 1;
+}
+
+/* Only show mobile dropdowns on mobile devices */
+@media (min-width: 992px) {
+    .mobile-dropdown {
+        display: none;
+    }
 }
 
 .search-box {
@@ -994,7 +1012,6 @@ form button[type="submit"]:hover {
     color: var(--accent-color) !important;
     text-decoration: underline;
 }
-
 
 
 /* Toggle buttons in Seller Modal */

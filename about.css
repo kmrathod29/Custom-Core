@@ -2,17 +2,833 @@
     --primary-color: #2506ad;
     --secondary-color: #5b28d6;
     --accent-color: #9c5bf2;
-    --dark-bg: #130d24;
+    --accent-hover: #b07ff5;
+    --light-color: #f8f9fa;
     --light-bg: #f8f9fa;
+    --dark-color: #343a40;
+    --dark-bg: #130d24;
+    --transition: all 0.3s ease;
     --card-bg: #ffffff;
-    --text-color: #333333;
 }
 
 body {
     font-family: 'Poppins', sans-serif;
-    color: var(--text-color);
+    /* color: var(--text-color); */
     background-color: var(--light-bg);
 }
+
+.navbar {
+    background-color: var(--dark-bg);
+    padding: 0.6rem 1rem;
+}
+
+
+/* Brand styling */
+.navbar-brand {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+    padding: 0.2rem 0;
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+    margin-right: 0;
+}
+
+.navbar-brand span {
+    color: var(--accent-color);
+}
+
+.navbar-brand:hover {
+    color: white;
+}
+
+.navbar-brand i {
+    margin-right: 0.3rem;
+    transform: rotate(0deg);
+    transition: transform 0.4s ease;
+}
+
+.navbar-brand:hover i {
+    transform: rotate(15deg);
+}
+
+/* Toggler styling */
+.navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.6rem;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 0.25rem rgba(156, 91, 242, 0.25);
+}
+
+/* Add glow effect for active items */
+.navbar-nav .nav-link.active {
+    text-shadow: 0 0 10px rgba(156, 91, 242, 0.5);
+}
+
+.nav-link {
+    color: white;
+    position: relative;
+    transition: all 0.3s ease;
+    padding: 0.7rem 1rem;
+    margin: 0 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    z-index: 1;
+}
+
+.nav-link::before {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background-color: var(--accent-color);
+    opacity: 0;
+    border-radius: 10px;
+    transition: width 0.3s ease, opacity 0.2s ease;
+    z-index: -1;
+}
+
+.nav-link:hover::before {
+    width: 60%;
+    opacity: 0.6;
+}
+
+.nav-link:hover {
+    color: var(--accent-color);
+    transform: translateY(-2px);
+}
+
+/* Active link styling */
+.nav-link.active {
+    color: var(--accent-color) !important;
+    font-weight: 500;
+    transform: translateY(-2px);
+}
+
+/* Modern active indicator with animation */
+.nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(156, 91, 242, 0.3);
+    transition: width 0.3s ease;
+}
+
+.nav-link.active:hover::after {
+    width: 85%;
+}
+
+.navbar-toggler {
+    border-color: var(--accent-color);
+}
+
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%239c5bf2' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Desktop Dropdown Styles */
+.navbar-nav .dropdown-menu {
+    background-color: var(--dark-bg);
+    border: 1px solid var(--accent-color);
+    border-radius: 0.25rem;
+    margin-top: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding-top: 8px;
+}
+
+/* Create a small transparent area above dropdown to prevent hover gaps */
+.navbar-nav .dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background: transparent;
+}
+
+.navbar-nav .dropdown-item {
+    color: var(--light-color);
+    padding: 0.5rem 1rem;
+    transition: var(--transition);
+}
+
+.navbar-nav .dropdown-item:hover,
+.navbar-nav .dropdown-item:focus {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+/* Custom dropdown toggle styling */
+.custom-dropdown-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.custom-dropdown-toggle .fa-caret-down {
+    font-size: 0.85em;
+    position: relative;
+    z-index: 2;
+}
+
+/* Overrides Bootstrap's default arrow for our custom toggle */
+.custom-dropdown-toggle::after {
+    display: none !important;
+}
+
+/* Style the active indicator separately */
+.custom-dropdown-toggle.active::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), var(--secondary-color));
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(156, 91, 242, 0.3);
+    transition: width 0.3s ease;
+    z-index: 1;
+}
+
+/* Enable hover dropdown on desktop with improved behavior */
+@media (min-width: 992px) {
+
+    /* Create hover area that includes both nav-item and its dropdown */
+    .navbar-nav .dropdown {
+        position: relative;
+    }
+
+    /* Show dropdown on hover of the parent nav-item */
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        display: block;
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Add a small delay to prevent accidental closing */
+    .navbar-nav .dropdown .dropdown-menu {
+        display: block;
+        opacity: 0;
+        visibility: hidden;
+        margin-top: 0;
+        transition: opacity 0.2s, visibility 0.2s;
+        pointer-events: none;
+    }
+
+    .navbar-nav .dropdown:hover .dropdown-menu {
+        pointer-events: auto;
+    }
+
+    /* Add extra hover area to prevent gaps */
+    .navbar-nav .dropdown::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        height: 10px;
+    }
+}
+
+/* Mobile dropdown container */
+.mobile-dropdown {
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+/* Mobile dropdown menu - always visible */
+.mobile-dropdown .mobile-dropdown-menu {
+    display: block !important;
+    /* Force display */
+    list-style: none;
+    padding-left: 1.5rem;
+    margin: 0.25rem 0 0.5rem 0;
+    overflow: visible;
+}
+
+/* Mobile dropdown link styling */
+.mobile-dropdown>.nav-link {
+    font-weight: 600;
+    /* Bold the parent item */
+    color: var(--light-color, #f8f9fa);
+    display: block;
+    padding: 0.5rem 0;
+}
+
+/* Hide the dropdown caret */
+/* .mobile-dropdown .fa-caret-down,
+.mobile-dropdown .mobile-dropdown-toggle {
+    display: none;
+} */
+
+/* Style the dropdown menu items */
+.mobile-dropdown-menu .nav-link {
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    color: var(--light-color, #f8f9fa);
+    opacity: 0.85;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Hover effect for dropdown items */
+.mobile-dropdown-menu .nav-link:hover {
+    color: var(--accent-hover, #007bff);
+    opacity: 1;
+}
+
+/* Active state for dropdown items */
+.mobile-dropdown-menu .nav-link.active {
+    color: var(--accent-color, #0056b3);
+    opacity: 1;
+}
+
+/* Only show mobile dropdowns on mobile devices */
+@media (min-width: 992px) {
+    .mobile-dropdown {
+        display: none;
+    }
+}
+
+.search-box {
+    position: relative;
+    height: 40px;
+}
+
+/* Search box styling */
+.search-box input {
+    height: 100%;
+    width: 100%;
+    border: none;
+    outline: none;
+    background: rgba(255, 255, 255, 18%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 0 60px 0 20px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    background: rgba(255, 255, 255, 18%);
+    box-shadow: 0 0 5px rgb(255, 255, 255);
+}
+
+.search-box input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-box .search-btn {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    height: 30px;
+    width: 30px;
+    color: var(--accent-color);
+    background: transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.search-box .search-btn:hover {
+    background: rgba(156, 91, 242, 0.2);
+    color: var(--accent-hover);
+}
+
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+}
+
+.fa-shopping-cart:hover {
+    color: var(--accent-color);
+}
+
+.cart-count {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+}
+
+#userArea .btn {
+    border-radius: 30px;
+    padding: 8px 25px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    transition: var(--transition);
+    margin-right: -5em;
+}
+
+.login {
+    /* background-color: transparent; */
+    border: 2px solid var(--accent-color);
+    color: white;
+    gap: 2em;
+}
+
+.login:hover {
+    /* background-color: var(--primary-color); */
+    color: var(--accent-color);
+    transform: translateY(-3px);
+    border: 2px solid var(--accent-color);
+    text-decoration: none !important;
+}
+
+/* Exclude Login button from hover effects */
+#loginBtn::before,
+#loginBtn:hover::before {
+    content: none !important;
+}
+
+.login:visited {
+    color: white;
+}
+
+/* Mobile search and cart container */
+.mobile-actions {
+    display: none;
+}
+
+/* Default positioning for all screen sizes */
+#userArea {
+    /* Remove any absolute positioning that might be affecting it globally */
+    position: relative;
+}
+
+/* For screens 992px and above (large screens) */
+@media (min-width: 992px) {
+    #userArea {
+        /* Move to the right side */
+        margin-left: auto;
+        order: 3;
+        /* Place after navbar-collapse which usually has order: 2 */
+    }
+
+    /* Ensure navbar brand stays at left */
+    .navbar-brand {
+        margin-right: auto;
+        order: 1;
+    }
+
+    /* Ensure navbar collapse stays in the middle */
+    .navbar-collapse {
+        order: 2;
+        flex-grow: 1;
+    }
+
+    .navbar-nav {
+        margin-left: 1em;
+    }
+
+    .search-box {
+        margin-right: 10em !important;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 991.98px) {
+    .navbar>.container {
+        position: relative;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+    }
+
+    /* Center the brand */
+    .navbar-brand {
+        margin: 0 auto 0 10px;
+        text-align: left;
+        /* order: 1; */
+    }
+
+    /* Position the toggler on the left */
+    .navbar-toggler {
+        order: -1;
+        margin-left: -0.9rem;
+        font-size: 1em;
+    }
+
+    /* Move Login button to right side */
+    #userArea {
+        position: absolute;
+        right: 68px;
+        top: 10px;
+    }
+
+    #userArea .btn {
+        padding: 5px 15px;
+        font-size: 0.9rem;
+    }
+
+    #mobileUserArea .login {
+        border-radius: 30px;
+        letter-spacing: 0.5px;
+    }
+
+    /* Position the mobile search and cart container */
+    .mobile-actions {
+        display: flex;
+        justify-content: space-between;
+        /* padding: 10px 15px; */
+        background-color: rgba(19, 13, 36, 0.95);
+        border-radius: 5px;
+        margin-top: 0.75rem;
+    }
+
+    /* Make search box fill available space */
+    .mobile-search-box {
+        flex-grow: 1;
+        margin-right: 15px;
+    }
+
+    /* Hide desktop search box and cart icon */
+    .desktop-search-box,
+    .desktop-cart-icon {
+        display: none;
+    }
+
+    .cart-icon {
+        margin-top: 7px;
+    }
+
+    .navbar-collapse {
+        background-color: rgba(19, 13, 36, 0.95);
+        padding: 1rem;
+        border-radius: 10px;
+        margin-top: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .nav-link {
+        margin: 0.3rem 0;
+        padding: 0.5rem 1rem;
+        border-radius: 5px;
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+        background-color: rgba(156, 91, 242, 0.1);
+    }
+
+    .user-dropdown-menu {
+        position: static;
+        box-shadow: none;
+        border: 1px solid #f1f1f1;
+        margin-top: 0.5rem;
+        width: 100%;
+    }
+}
+
+/* Mobile styles */
+.mobile-actions {
+    display: none;
+}
+
+.mobile-nav-line-1,
+.mobile-nav-line-2,
+.mobile-scroll-navbar {
+    display: none;
+    background-color: var(--dark-bg) !important;
+}
+
+/* Desktop vs Mobile Display */
+@media (max-width: 768px) {
+    .desktop-navbar {
+        display: none !important;
+    }
+
+    .mobile-nav-line-1,
+    .mobile-nav-line-2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        width: 100%;
+    }
+
+    .mobile-scroll-navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1040;
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.5rem 1rem;
+        border-bottom: 1px solid #ccc;
+        transition: transform 0.3s ease, z-index 0.1s;
+    }
+
+    .desktop-cart-icon {
+        display: none !important;
+    }
+
+    .mobile-cart-icon {
+        display: flex !important;
+    }
+}
+
+@media (min-width: 769px) {
+
+    .mobile-nav-line-1,
+    .mobile-nav-line-2,
+    .mobile-scroll-navbar {
+        display: none !important;
+    }
+
+    .desktop-actions {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .mobile-cart-icon {
+        display: none !important;
+    }
+
+    .desktop-cart-icon {
+        display: flex !important;
+    }
+}
+
+/* Mobile User Dropdown Styles */
+.mobile-user-dropdown {
+    position: relative;
+}
+
+.mobile-user-dropdown-toggle {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 20px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.mobile-user-dropdown-toggle i {
+    margin-left: 8px;
+}
+
+.mobile-user-dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 100%;
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    min-width: 180px;
+    z-index: 1000;
+}
+
+.mobile-user-dropdown-menu.show {
+    display: block;
+}
+
+.mobile-user-dropdown-menu .user-dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: #333;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.mobile-user-dropdown-menu .user-dropdown-item:hover {
+    background-color: #f5f5f5;
+}
+
+.mobile-user-dropdown-menu .user-dropdown-item i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+.mobile-user-dropdown-menu .logout {
+    border-top: 1px solid #eee;
+}
+
+/* Offcanvas Menu Styling */
+.offcanvas {
+    background-color: var(--dark-bg);
+    color: var(--light-color);
+    transition: var(--transition);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 280px;
+    z-index: 1045;
+}
+
+/* When offcanvas is open, we can hide the mobile scroll navbar */
+body:has(.offcanvas.show) .mobile-scroll-navbar {
+    transform: translateY(-100%);
+}
+
+.offcanvas-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1rem;
+    position: sticky;
+    top: 0;
+    background-color: var(--dark-bg);
+    z-index: 1;
+}
+
+/* Prevent scroll on body when offcanvas is open */
+body:has(.offcanvas.show) {
+    overflow: hidden;
+}
+
+.offcanvas-title {
+    color: var(--light-color);
+    font-weight: 600;
+}
+
+.offcanvas-title span {
+    color: var(--accent-color);
+}
+
+.offcanvas-title i {
+    margin-right: 0.5rem;
+    color: var(--accent-color);
+}
+
+.btn-close {
+    background-color: transparent;
+    opacity: 0.8;
+}
+
+.btn-close:hover {
+    opacity: 1;
+    background-color: var(--accent-hover);
+}
+
+.offcanvas-body {
+    padding: 1rem 0;
+}
+
+.offcanvas .navbar-nav {
+    width: 100%;
+}
+
+.offcanvas .nav-item {
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.offcanvas .nav-link {
+    color: var(--light-color);
+    padding: 0.8rem 1.5rem;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.offcanvas .nav-link:hover,
+.offcanvas .nav-link:focus {
+    background-color: rgba(156, 91, 242, 0.1);
+    color: var(--accent-color);
+    padding-left: 1.8rem;
+}
+
+.offcanvas .nav-link i {
+    margin-right: 0.5rem;
+    width: 20px;
+    text-align: center;
+}
+
+/* Offcanvas animation */
+.offcanvas.offcanvas-start {
+    transform: translateX(-100%);
+}
+
+.offcanvas.offcanvas-start.show {
+    transform: translateX(0);
+}
+
+/* Button that triggers the offcanvas */
+.btn[data-bs-toggle="offcanvas"] {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+}
+
+.btn[data-bs-toggle="offcanvas"]:hover {
+    background-color: var(--accent-color);
+    color: var(--light-color);
+}
+
+/* Mobile menu backdrop overlay */
+.offcanvas-backdrop {
+    background-color: rgba(19, 13, 36, 0.7);
+    z-index: 1044;
+}
+
+.offcanvas-backdrop.show {
+    opacity: 1;
+}
+
+/* Smooth transition for menu items */
+.offcanvas .nav-item {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    transition-delay: calc(0.05s * var(--delay));
+}
+
+.offcanvas.show .nav-item {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Apply different delays for each nav item */
+.offcanvas .nav-item:nth-child(1) {
+    --delay: 1;
+}
+
+.offcanvas .nav-item:nth-child(2) {
+    --delay: 2;
+}
+
+.offcanvas .nav-item:nth-child(3) {
+    --delay: 3;
+}
+
+.offcanvas .nav-item:nth-child(4) {
+    --delay: 4;
+}
+
+.offcanvas .nav-item:nth-child(5) {
+    --delay: 5;
+}
+
 
 .about-section {
     padding: 80px 0;
